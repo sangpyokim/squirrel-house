@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { Alert, BackHandler } from 'react-native';
 import SplashScreen from 'react-native-splash-screen';
 
+import { Provider } from 'react-redux'
+import { store } from './src/redux/store';
+
 import { NavigationContainer } from '@react-navigation/native'
 
 import Logging from './src/navigation/LoggingNav';
@@ -22,7 +25,8 @@ export default function App() {
     };
   
   useEffect( () => {
-    
+      // 불러와야할 에셋, api들을 불러옴
+      // loaded === true && 저장된 유저정보 === true, 유저정보 리덕스에 저장되면 메인페이지로 이동 그렇지않으면 로그인페이지
       setTimeout( () => {
         SplashScreen.hide()
       }, 3000)
@@ -34,14 +38,16 @@ export default function App() {
   }, [])
 
   return(
+    <Provider store={store} >
     <NavigationContainer>
       {logging
         ?
           <MainStackNav />
         :
-        <Logging />
+          <Logging />
       }
     </NavigationContainer>
+    </Provider>
   )
 
 

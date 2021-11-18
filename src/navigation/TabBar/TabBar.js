@@ -4,9 +4,11 @@ import styled from 'styled-components'
 import Tab from './Tab'
 import WriteTab from './WriteTab'
 import Svg, { Path } from 'react-native-svg'
+import { MainColor } from '../../components/Color'
 
 const width = Math.floor(Dimensions.get('window').width)
 const height = Math.floor(Dimensions.get('window').height)
+
 
 const Container = styled.View`
     position: absolute;
@@ -19,7 +21,6 @@ const Container = styled.View`
     z-index: 10;
 `
 
-const icons = ['home'];
 
 const TabBar = (props,{ state}) => {
     const [ selected, setSelected ] = useState('모임찾기')
@@ -27,7 +28,7 @@ const TabBar = (props,{ state}) => {
     const {routes} = props.state;
     const {navigation} = props
 
-    const renderColor = (currentTab) => currentTab === selected ? 'wheat' : 'black'
+    const renderColor = (currentTab) => currentTab === selected ? MainColor.Banana : 'black'
 
     const handlePress = (activeTab) => {
         if (selected !== activeTab){
@@ -58,14 +59,14 @@ const TabBar = (props,{ state}) => {
         <Container>
                 <Tab 
                     tab={routes[0]} 
-                    icon={icons[0]} 
+                    icon={0} 
                     onPress={() => handlePress(routes[0].name)} 
                     color={renderColor(routes[0].name)} 
                     key={routes[0].key} 
                 />
                 <Tab 
                     tab={routes[1]} 
-                    icon={routes[1].name} 
+                    icon={1} 
                     onPress={() => handlePress(routes[1].name)} 
                     color={renderColor(routes[1].name)} 
                     key={routes[1].key} 
@@ -78,7 +79,7 @@ const TabBar = (props,{ state}) => {
                 />
                 <Tab 
                     tab={routes[3]} 
-                    icon={routes[3].name} 
+                    icon={2} 
                     onPress={() => handlePress(routes[3].name)} 
                     color={renderColor(routes[3].name)} 
                     key={routes[3].key} 
@@ -87,7 +88,7 @@ const TabBar = (props,{ state}) => {
                     tab={routes[4]} 
                     onPress={() => handlePress(routes[4].name)} 
                     color={renderColor(routes[4].name)} 
-                    icon={routes[4].name} 
+                    icon={3} 
                     key={routes[4].key} 
                 />
         </Container>

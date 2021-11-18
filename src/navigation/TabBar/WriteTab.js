@@ -2,6 +2,8 @@ import React from 'react'
 import { Dimensions, Platform } from 'react-native'
 import styled from 'styled-components'
 import { FontAwesome } from '@expo/vector-icons'
+import TextSvg from '../../asset/bottomnav/Group9.svg'
+import { MainColor } from '../../components/Color'
 
 const width = Dimensions.get('window').width * 0.17
 
@@ -13,7 +15,7 @@ const Container = styled.TouchableOpacity`
     margin:2px;
     position:relative;
     bottom: ${Dimensions.get('window').height * 0.04}px;
-    background-color: #ffffff;
+    background-color: ${MainColor.Banana};
     width: ${width}px;
     height: ${width}px;
     border-radius:${width * 0.5}px;
@@ -24,7 +26,7 @@ const Container = styled.TouchableOpacity`
 const Tab = ({ color, tab, onPress, icon  }) => {
     return(
         <Container onPress={onPress} >
-            <FontAwesome name='pencil' size={28} color={'white'} />
+            <TextSvg width={60} height={60} /> 
         </Container>
     )
 }
