@@ -23,6 +23,7 @@ const CategoryHeader = styled.View`
 `
 const CategoryTitle = styled.Text`
     font-size: 18px;
+    font-family: 'Dream';
 `
 const CategoryToggle = styled.TouchableOpacity`
 
@@ -33,7 +34,7 @@ const CategoryContents = styled.View`
     flex-wrap: wrap;
 `
 const CategoryContent = styled.View`
-    background-color: #ddd;
+    background-color: ${MainColor.BACKGROUND};
     align-items: center;
     justify-content: center;
     width: 25%;
@@ -55,7 +56,7 @@ const InfoCount = styled.View`
     height: 40px;
     padding: 10px;
     margin-left: 10px;
-    border-radius: 5px ;
+    border-radius: 2px ;
     align-items: center;
     justify-content: flex-end;
     flex-direction: row;
@@ -74,12 +75,12 @@ justify-content: space-between;
 padding: 0 5% 5% 5%;
 `
 const PrefWrapper = styled.View`
-    background-color: #eee;
-    padding: 5% 7%;
+    padding: 0% 16px;
     justify-content:center;
     padding-bottom: 0;
 `
 const PrefContents = styled.View`
+    padding: 0 12px;
 `
 const PrefContent = styled.View`
     align-items:center;
@@ -91,7 +92,7 @@ const PrefContent = styled.View`
 
 const OptionWrapper = styled.View`
     padding: 3% 5%;
-    background-color: #eee;
+    background-color: ${MainColor.BACKGROUND};
     margin-bottom: 3%;
 `
 const OptionContioner = styled.View`
@@ -113,6 +114,7 @@ const CreateButton = styled.TouchableOpacity`
     justify-content:center;
     align-items:center;
     height: 50px;
+    border-radius: 2px;
 `
 
 const Writing = ({ navigation }) => {
@@ -207,15 +209,15 @@ const Writing = ({ navigation }) => {
                             <TouchableOpacity 
                                 onPress={() => onPress(index)} 
                                 style={{ 
-                                    backgroundColor: index === selected ? 'white':'#F2F3F5',
+                                    backgroundColor: index === selected ? 'white': MainColor.BACKGROUND,
                                     borderColor: index === selected ? MainColor.Banana: null,
                                     borderWidth: index === selected ? 1 : null,
                                     height: 75, width: '100%',
                                     alignItems: 'center', 
-                                    justifyContent: 'center' 
+                                    justifyContent: 'center' ,
                                 }} >
-                                <AntDesign name="down" size={25} color={index === selected ? MainColor.Banana: "black"} />
-                                <Text style={{ color:index === selected ? MainColor.Banana: "black" }} >{category}</Text>
+                                <AntDesign name="down" size={25} color={index === selected ? MainColor.Banana: MainColor.BLACK38} />
+                                <Text style={{ color:index === selected ? MainColor.Banana: MainColor.BLACK38, fontFamily: 'Noto500' }} >{category}</Text>
                             </TouchableOpacity>
                             </CategoryContent>
                         ))}
@@ -246,21 +248,21 @@ const Writing = ({ navigation }) => {
                         <PrefContents>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
-                                <Text style={{ width: 50, textAlign: 'left' }} >모임명</Text>
-                                <TextInput onChangeText={(text) => setName(text)} placeholder='모임명을 적어주세요' style={{ width: '80%', height: 40,padding: 10 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 5 }}  ></TextInput>
+                                <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14 }} >모임명</Text>
+                                <TextInput onChangeText={(text) => setName(text)} placeholder='모임명을 적어주세요' style={{ width: '80%', fontFamily: 'Noto400', fontSize: 12, height: 40,padding: 10 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2 }}  ></TextInput>
                             </PrefContent>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
-                                <Text style={{ width: 50, textAlign: 'left', }}  >활동지</Text>
-                                <TextInput onChangeText={(text) => setArea(text)} placeholder='활동 장소를 적어주세요' style={{ width: '80%', height: 40,padding: 10 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 5 }}  ></TextInput>
+                                <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14 }}  >활동지</Text>
+                                <TextInput onChangeText={(text) => setArea(text)} placeholder='활동 장소를 적어주세요' style={{ width: '80%', height: 40, fontFamily: 'Noto400', fontSize: 12,padding: 10 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2 }}  ></TextInput>
                             </PrefContent>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
-                                <Text style={{ width: 50, textAlign: 'left', }}  >사진</Text>
+                                <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14 }}  >사진</Text>
                                 <View style={{ width: '80%', flexDirection: 'row', justifyContent:'space-between',marginRight: 10  }} >
                                     <View
-                                        style={{ width: '70%', height: 40,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 5, paddingLeft: 10, textAlign: 'center', justifyContent: 'center'}} >
-                                        <Text>
+                                        style={{ width: '70%', height: 40,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2, paddingLeft: 10, textAlign: 'center', justifyContent: 'center'}} >
+                                        <Text style={{ fontFamily: 'Noto400', fontSize: 12 }} >
                                         {image 
                                           ? 
                                         `${image.substring(image.lastIndexOf("ImagePicker")+12).substr(0,15)}...${image.substr(-4)}`
@@ -277,25 +279,25 @@ const Writing = ({ navigation }) => {
                             </PrefContent>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
-                                <Text style={{ width: 50, textAlign: 'left'}}  >횟수</Text>
+                                <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14}}  >횟수</Text>
                                 <View style={{ flexDirection: 'row', width: '80%', justifyContent: 'space-between', marginLeft: 10, alignItems: 'center' }} >
                                     <View style={{ width: '50%', flexDirection: 'row' }} >
                                         <TouchableOpacity 
                                             onPress={() => setPriod(true)}
-                                            style={{ width: '45%',height:40 ,backgroundColor: period ? 'wheat' : 'white' , borderWidth: 1, borderColor: '#999', borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text  style={{ opacity: 0.4}}>단기</Text>
+                                            style={{ width: '45%',height:40 ,backgroundColor: period ? MainColor.GRAY2 : 'white' , borderWidth: 1, borderColor: '#999', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text  style={{ opacity: 0.4, fontFamily: 'Noto400', fontSize: 12}}>단기</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity 
                                             onPress={() => setPriod(false)}
-                                            style={{ width: '45%',height:40 ,backgroundColor: period ? 'white' : 'wheat' , borderWidth: 1, borderColor: '#999', borderRadius: 5, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ opacity: 0.4}} >정기</Text>
+                                            style={{ width: '45%',height:40 ,backgroundColor: period ? 'white' : MainColor.GRAY2 , borderWidth: 1, borderColor: '#999', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ opacity: 0.4, fontFamily: 'Noto400', fontSize: 12}} >정기</Text>
                                         </TouchableOpacity>
                                     </View>
                                     { period ? null 
                                       :
                                     <View style={{ width: '50%', flexDirection: 'row', justifyContent: 'flex-end', alignItems:'center'}} >
                                         <Text style={{ width: '25%', paddingLeft: 10}} >주</Text>
-                                        <TextInput onChangeText={(text) => setTimes(text)}  placeholder='회' style={{ width: '75%', height: 40,padding: 10 ,backgroundColor: 'white', borderWidth: 1, borderColor: '#999', borderRadius: 5, textAlign: 'center' }}></TextInput>
+                                        <TextInput onChangeText={(text) => setTimes(text)} placeholder='회' style={{ width: '75%', height: 40,padding: 8,backgroundColor: 'white', borderWidth: 1, borderColor: '#999', borderRadius: 2, textAlign:'right' }}></TextInput>
                                     </View>
                                       
                                       }
@@ -303,7 +305,7 @@ const Writing = ({ navigation }) => {
                             </PrefContent>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
-                                <Text style={{ width: 50, textAlign: 'left', }}  >활동일</Text>
+                                <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14 }}  >활동일</Text>
                                 {period 
                                   ?
                                 <View style={{ flexDirection: 'row', width: '80%', justifyContent: 'space-between', marginLeft: 10, alignItems: 'center' }} >
@@ -320,13 +322,13 @@ const Writing = ({ navigation }) => {
                                 
                             </PrefContent>
                             <PrefContent>
-                                <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
-                                <Text style={{ width: 50, textAlign: 'left' }} >모집인원</Text>
+                                <AntDesign name="down" size={24} color="black" style={{ marginRight: 10 }} />
+                                <Text style={{ width: 55, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14}} >모집인원</Text>
                                 <InfoCount>
                                     <InfoCountButton>
                                         <Text onPress={() => count < 10 ? setCount(count+1) : null } >+</Text>
                                     </InfoCountButton>
-                                    <Text>{count}</Text>
+                                    <Text style={{ color: MainColor.BLACK70 }} >{count}</Text>
                                     <InfoCountButton>
                                         <Text onPress={() => count > 2 ? setCount(count-1) : null } >-</Text>
                                     </InfoCountButton>
@@ -377,7 +379,7 @@ const Writing = ({ navigation }) => {
                     }
                 </PrefContainer>
             <CreateButton onPress={onPressMakingGroup}> 
-                <Text>모임 만들기</Text>
+                <Text style={{ color: MainColor.BLACK }} >모임 만들기</Text>
             </CreateButton>
         </Wrapper>
     )

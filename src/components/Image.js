@@ -9,6 +9,7 @@ const Container = styled.TouchableOpacity`
     align-items: center;
     justify-content: center;
     background-color: #c4c4c4;
+    border-radius: 2px;
 `
 
 export const ImagePick = ({ setImage }) => {

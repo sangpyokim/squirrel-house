@@ -28,7 +28,7 @@ const TabBar = (props,{ state}) => {
     const {routes} = props.state;
     const {navigation} = props
 
-    const renderColor = (currentTab) => currentTab === selected ? MainColor.Banana : 'black'
+    const renderColor = (currentTab) => currentTab === selected ? MainColor.Banana : MainColor.BLACK38
 
     const handlePress = (activeTab) => {
         if (selected !== activeTab){
@@ -45,7 +45,7 @@ const TabBar = (props,{ state}) => {
                 backgroundColor: 'transparent', 
                 position:'absolute', 
                 bottom: 0,
-             	shadowColor: '#000',
+             	shadowColor: MainColor.BLACK,
                 shadowOffset: {
                     width: 0,
                     height: 2,

@@ -5,6 +5,7 @@ import { createMaterialTopTabNavigator } from '@react-navigation/material-top-ta
 
 import Ed from '../screen/maintain/ed'
 import Ing from '../screen/maintain/ing'
+import { MainColor } from '../components/Color';
 
 const Tab = createMaterialTopTabNavigator();
 
@@ -18,7 +19,7 @@ const MaintainNavigation = () => {
             tabBarItemStyle: { width: Width, height: 50},
             tabBarScrollEnabled: true,
             tabBarBounces: false,
-            tabBarIndicatorStyle: { backgroundColor: "#aad"} // 
+            tabBarIndicatorStyle: { backgroundColor: MainColor.Banana} // 
         }}        
         >
             <Tab.Screen name="활동중" component={Ing} options={{ title: '활동중' }} />

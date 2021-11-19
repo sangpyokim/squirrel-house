@@ -4,13 +4,14 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 
 import MainTabBottomNav from './MainTabBottomNav';
 import Writing from '../screen/main/Writing'
+import { SafeAreaView } from 'react-native';
 
 const Stack = createNativeStackNavigator();
 
 
 const MainStackNav = () => {
     return (
-        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true }}  >
+        <Stack.Navigator screenOptions={{ headerShown: false, gestureEnabled: true, headerStyle: {height: 56} }}  >
             <Stack.Screen 
                 name="MainTabBottomNav" 
                 component={MainTabBottomNav} />
@@ -24,7 +25,8 @@ const MainStackNav = () => {
                     presentation: 'card',
                     headerTransparent: false,
                     headerBackTitleVisible: false,                           
-                    headerTitleAlign: 'center'
+                    headerTitleAlign: 'center',
+                    headerTitleStyle:{fontFamily: 'Dream', fontSize: 20},
                 }}/>    
         </Stack.Navigator>
     )

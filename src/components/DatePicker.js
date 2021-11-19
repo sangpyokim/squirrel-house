@@ -13,15 +13,17 @@ export const DatePickers = ({setDay}) => {
     const Container = styled.View`
         border: 1px solid #999;
         background-color: #fff;
-        border-radius: 5px ;
+        border-radius: 2px ;
         width: 45%;
         height: 40px;
         align-items:center;
         justify-content:center;
+
     `
     const Text = styled.Text`
       opacity: 0.4;
-
+      font-size: 12px;
+      font-family: 'Noto400';
     `
   return (
     <Container >

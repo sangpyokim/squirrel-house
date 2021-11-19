@@ -10,6 +10,7 @@ import Sports from '../screen/main/maintop/Sports'
 import Study from '../screen/main/maintop/Study'
 import Meal from '../screen/main/maintop/Meal'
 import Etc from '../screen/main/maintop/Etc'
+import { MainColor } from '../components/Color';
 
 
 
@@ -21,11 +22,11 @@ const MainTopNavigation = () => {
     return (
         <Tab.Navigator 
         screenOptions={{
-            tabBarLabelStyle: {fontSize: 16, letterSpacing: 0.15 },
+            tabBarLabelStyle: {fontSize: 16, letterSpacing: 0.15, fontFamily: 'Noto500' },
             tabBarItemStyle: { width: Width, height: 50},
             tabBarScrollEnabled: true,
             tabBarBounces: false,
-            tabBarIndicatorStyle: { backgroundColor: '#aad' }
+            tabBarIndicatorStyle: { backgroundColor: MainColor.Banana}
         }}        
         >
             <Tab.Screen name="AllBoard" component={Home} options={{title: '전체'}} />

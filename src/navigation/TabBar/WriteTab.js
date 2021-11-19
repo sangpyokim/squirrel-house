@@ -1,9 +1,9 @@
 import React from 'react'
 import { Dimensions, Platform } from 'react-native'
 import styled from 'styled-components'
-import { FontAwesome } from '@expo/vector-icons'
-import TextSvg from '../../asset/bottomnav/Group9.svg'
+import TextSvg from '../../asset/bottom_nav/writing.svg'
 import { MainColor } from '../../components/Color'
+import {ICONSIZE} from '../../components/Size'
 
 const width = Dimensions.get('window').width * 0.17
 
@@ -14,7 +14,7 @@ const Container = styled.TouchableOpacity`
     padding: 20px;
     margin:2px;
     position:relative;
-    bottom: ${Dimensions.get('window').height * 0.04}px;
+    bottom: ${Dimensions.get('window').height * 0.035}px;
     background-color: ${MainColor.Banana};
     width: ${width}px;
     height: ${width}px;
@@ -26,7 +26,7 @@ const Container = styled.TouchableOpacity`
 const Tab = ({ color, tab, onPress, icon  }) => {
     return(
         <Container onPress={onPress} >
-            <TextSvg width={60} height={60} /> 
+            <TextSvg width={30} height={30} fill="white" /> 
         </Container>
     )
 }
