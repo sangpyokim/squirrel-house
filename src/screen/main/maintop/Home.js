@@ -1,5 +1,22 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Image, Button,TouchableOpacity } from 'react-native'
+import { Text } from 'react-native'
+import styled from 'styled-components'
+
+const Wrapper = styled.View`
+  padding: 8px 0;
+  width:100%;
+`
+const Header = styled.View`
+  background-color: black;
+  padding: 16px 8px;
+  width: 100%;
+  height:100px;
+`
+const Content = styled.View`
+  background-color:white;
+  width: 100%;
+  height:70px;
+`
 
 const Home = () => {
     const [date, setDate] = useState(new Date())
@@ -8,23 +25,30 @@ const Home = () => {
 
 
     const onPress = async() => {
-      const data = await fetch('http://192.168.1.31:8080/room/getList', {
+      const data = await fetch('http://211.227.151.158:8080/room/getList', {
         method: 'post',
         headers: {
           "Accept": 'application/json',
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          "memberID": "User2"
+          "memberID": "User1"
         })
       }).then( res => res.json() )
 
-      console.log( data[0])
+      console.log( data )
     } 
 
     return (
-      <View>
-      </View>
+      <Wrapper>
+        <Header>
+          <Content>
+            <Text>
+              hot burning
+            </Text>
+          </Content>
+        </Header>
+      </Wrapper>
       );
 }
 

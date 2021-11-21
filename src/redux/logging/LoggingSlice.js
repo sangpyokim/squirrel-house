@@ -20,3 +20,4 @@ export const LoggingSlice = createSlice({
 export const { setLogggedInFalse, setLogggedInTrue } = LoggingSlice.actions;
 
 export default LoggingSlice.reducer
+

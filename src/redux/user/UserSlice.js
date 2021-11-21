@@ -1,7 +1,19 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-    user: null
+    user: {
+        id : "User1",
+        birth : 980101,
+        department : "시각영상디자인학과",
+        id_del : false,
+        is_men : false,
+        level : 0,
+        name : "정다희1",
+        nickname : "다희짱!!..1",
+        password : '1234',
+        stu_num : '20174301',
+        school_id : 1,
+    }
 }
 
 export const  UserSlice =  createSlice({
@@ -13,10 +25,13 @@ export const  UserSlice =  createSlice({
         },
         LogOut: (state) => {
             state.user = null
+        },
+        getUserInfo: ( state ) => {
+            state.user
         }
     }
 })
 
-export const { LogIn, LogOut } = UserSlice.actions;
+export const { LogIn, LogOut, getUserInfo } = UserSlice.actions;
 
 export default UserSlice.reducer 

@@ -16,19 +16,22 @@ export const ImagePick = ({ setImage }) => {
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      
     });
-
-    console.log(result);
-
     if (!result.cancelled) {
       setImage(result.uri);
+      const uri = result.uri
+      const res = await fetch(uri)
+      const imgBlob = await res.blob()
+      console.log(imgBlob)
     }
   };
 
+  
   return (
     <Container onPress={pickImage} >
           <Text>사진선택</Text>
