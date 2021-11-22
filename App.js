@@ -17,7 +17,13 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     "Dream": require('./src/asset/fonts/DreamBold.ttf'),
     "Noto500": require('./src/asset/fonts/NotoSansKR-Medium.otf'),
-    "Noto400": require('./src/asset/fonts/NotoSansKR-Regular.otf')
+    "Noto400": require('./src/asset/fonts/NotoSansKR-Regular.otf'),
+    "LotteDreamBold": require('./src/asset/fonts/LotteMartDreamBold.ttf'),
+    "LotteDreamLight": require('./src/asset/fonts/LotteMartDreamLight.ttf'),
+    "LotteDreamMedium": require('./src/asset/fonts/LotteMartDreamMedium.ttf'),
+    "LotteHappyBold": require('./src/asset/fonts/LotteMartHappyBold.ttf'),
+    "LotteHappyLight": require('./src/asset/fonts/LotteMartHappyLight.ttf'),
+    "LotteHappyMedium": require('./src/asset/fonts/LotteMartHappyBold.ttf')
   })
 
   const backAction = () => {
