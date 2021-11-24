@@ -22,11 +22,12 @@ const MainTopNavigation = () => {
     return (
         <Tab.Navigator 
         screenOptions={{
-            tabBarLabelStyle: {fontSize: 16, letterSpacing: 0.15, fontFamily: 'Noto500' },
-            tabBarItemStyle: { width: Width, height: 50},
+            tabBarLabelStyle: {fontSize: 16, letterSpacing: 0.15, fontFamily: 'Noto500', height: 48, lineHeight: 48 },
+            tabBarItemStyle: { width: Width, height: 48},
             tabBarScrollEnabled: true,
             tabBarBounces: false,
-            tabBarIndicatorStyle: { backgroundColor: MainColor.Banana}
+            tabBarIndicatorStyle: { backgroundColor: MainColor.Banana },
+            tabBarStyle:{ elevation:0}
         }}        
         >
             <Tab.Screen name="AllBoard" component={Home} options={{title: '전체'}} />

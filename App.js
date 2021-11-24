@@ -17,13 +17,7 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     "Dream": require('./src/asset/fonts/DreamBold.ttf'),
     "Noto500": require('./src/asset/fonts/NotoSansKR-Medium.otf'),
-    "Noto400": require('./src/asset/fonts/NotoSansKR-Regular.otf'),
-    "LotteDreamBold": require('./src/asset/fonts/LotteMartDreamBold.ttf'),
-    "LotteDreamLight": require('./src/asset/fonts/LotteMartDreamLight.ttf'),
-    "LotteDreamMedium": require('./src/asset/fonts/LotteMartDreamMedium.ttf'),
-    "LotteHappyBold": require('./src/asset/fonts/LotteMartHappyBold.ttf'),
-    "LotteHappyLight": require('./src/asset/fonts/LotteMartHappyLight.ttf'),
-    "LotteHappyMedium": require('./src/asset/fonts/LotteMartHappyBold.ttf')
+    "Noto400": require('./src/asset/fonts/NotoSansKR-Regular.otf')
   })
 
   const backAction = () => {
@@ -40,19 +34,20 @@ export default function App() {
   useEffect( () => {
       // 불러와야할 에셋, api들을 불러옴
       // loaded === true && 저장된 유저정보 === true, 유저정보 리덕스에 저장되면 메인페이지로 이동 그렇지않으면 로그인페이지
-      setTimeout(() => {
+      console.log(fontsLoaded)
+      if( fontsLoaded === true ) {
         setLogging(true)
         SplashScreen.hide()
-      }, 3000)
+      }
       const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
       return () => backHandler.remove();
-  }, [])
+  }, [fontsLoaded])
 // 에셋, 폰트를 불러오면 setLogging(true) => logging === true : SplashScreen.hide() ? null
 
 
   return(
     <>
-    <SafeAreaView style={{ backgroundColor: 'transparent' }} >
+    <SafeAreaView style={{ backgroundColor: 'transparent',  }} >
     </SafeAreaView>
     <Provider store={store} >
     <NavigationContainer>

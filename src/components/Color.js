@@ -1,6 +1,7 @@
 export const MainColor = {
     Banana: "#FFD515", //기본 노란색
-    BANANABOX: "#85783F", // 단기
+    BANANABOX: "#85783F", // 단기 
+    BLACKBOX: "#DFBA12", // 장기
     BLACK: '#000000',
     BLACK87: '#000000da', //opacity 87
     BLACK70: '#000000e6', //opacity 70

@@ -1,343 +1,256 @@
-import React, { useState, useEffect } from 'react'
-import { Text } from 'react-native'
-import styled from 'styled-components'
+import React from 'react'
+import { Dimensions, TouchableOpacity, View, Text  } from 'react-native';
+import styled from 'styled-components';
+import { AntDesign } from '@expo/vector-icons';
+import { useDispatch, useSelector } from 'react-redux';
+import { MainColor } from '../../../components/Color'
+import RightIcon from '../../../asset/2_page/right_icon.svg'
+import LongRightIcon from '../../../asset/2_page/long_right_icon.svg'
+import List from '../../../components/List'
 
-const Hot_Bunning = styled.View`
-    
-    width: 296px;
-    height: 24px;
-    left: 16.09px;
-    
-    font-family: Roboto;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #FFD515;
-    background-color:blue;
-`
 
-const Midterm = styled.View`
-    
-    width: 296px;
-    height: 48px;
-    left: 16.09px;
-    font-family: LotteMartDreamBold;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 20px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: rgba(0, 0, 0, 0.87);
-    background-color:yellow;
-`
-
-const Midterm_text = styled.View`
-    
-    width: 173px;
-    height: 40px;
-    left: 20.09px;
-    
-    font-family: Noto Sans KR;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 14px;
-    line-height: 20px;
-    letter-spacing: 0.15px;
-    color: #949494;
-    background-color:purple;
-`
-
-const Withme = styled.View`
-    
-    width: 328px;
-    height: 48px;
-    left: 16.09px;
-
-    background: #FFD515;
-    border-radius: 2px;
-    background-color:skyblue;
-`
-
-const Total_bunning_group_list = styled.View`
-    
-    width: 296px;
-    height: 23px;
-    left: 48.09px;
-    
-    font-family: Noto Sans KR;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 24px;
-    text-align: right;
-    letter-spacing: 0.15px;
-    color: rgba(0, 0, 0, 0.38);
-    background-color:red;
-`
-
-const Total_group_list = styled.View`
-    
-    width: 296px;
-    height: 24px;
-    left: 16.09px;
-    
-    font-family: LotteMartDreamBold;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    letter-spacing: 0.15px;
-    color: #FFD515;
-    background-color:green;
-`
-
+const Width = Dimensions.get('window').width
 
 const Wrapper = styled.ScrollView`
-    padding: 8px 16px 0px 16px;
+    width: ${Width}px;
+    background-color: #f4f4f4;
+`
+const BurningContainer = styled.View`
+    width: 100%;
+    background-color: white;
+    padding: 16px 16px 8px 16px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+`
+const BurningHeader = styled.View`
+    margin-top: 0px;
+    margin-bottom: 16px;
+`
+const SmallHeader = styled.Text`
+    color: ${MainColor.Banana};
+    font-size:12px;
+    font-weight:500;
+    letter-spacing: 0.15px;
+    line-height: 24px;
+`
+const BigHeader = styled.Text`
+    font-size:20px;
+    letter-spacing: 0.15px;
+    line-height: 24px;
+    font-family: 'Dream';
+`
+const BurningContent = styled.View`
+    margin-bottom: 28px;
+    height:40px;
+`
+const ContentText = styled.Text`
+    font-family: 'Noto400';
+    color: ${MainColor.BLACK38};
+    line-height:20px;
+    font-size:14px;
+    font-weight:400;
+    letter-spacing: 0.15px;
+`
+const BurningButtonBox = styled.TouchableOpacity`
     width:100%;
-    background-color:white;
+    height: 50px;
+    background-color: ${MainColor.Banana};
+    border-radius: 2px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items:center;
+    padding: 0px 16px;
+    text-align: center;
+    elevation: 5;
 `
-const Header = styled.View`
-  background-color: gray;
-  width: 100%;
-  height:100%;
+const BurningButtonText = styled.Text`
+    font-family: 'Noto500';
+    color: white;
+    font-size:16px;
+    font-weight:500;
+    letter-spacing: 0.15px;
+    line-height: 24px;
+    color: #515151;
 `
-const Content = styled.View`
-  background-color:white;
-  width: 100%;
-  height:70px;
+const BurningButtonuUnderText = styled.Text`
+    font-size:14px;
+    font-weight:400;
+    letter-spacing: 0.15px;
+    line-height: 24px;
+    text-align:right;
+    opacity: 0.4;
+`
+const CurrentContainer = styled.View`
+    width: 100%;
+    height: 180px;
+    background-color: white;
+    padding: 16px;
+`
+const CurrentHeader = styled.Text`
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 24px; 
+    letter-spacing: 0.15px;
+    margin-bottom: 10px;
+    color: #676767;
+`
+const CurrentContents = styled.ScrollView`
+
+`
+// ImageBackground 로 변경해야함
+const CurrentContent = styled.View`
+    width: 120px;
+    height:110px;
+    background-color: aliceblue;
+    margin-right: 8px;
+`
+const GroupContainer = styled.View`
+    width: 100%;
+    height: 400px;
+    margin-top: 8px;
+    background-color: white;    
+`
+const GroupHeader = styled.View`
+    width: 100%;
+    height: 55px;
+    padding: 16px 16px 0 16px;
+    flex-direction: row;
+    justify-content: space-between;
+    border-bottom-width: 0.91px;
+    border-bottom-color: rgba(33,33,33, 0.08);
+`
+const HeaderText = styled.Text`
+    font-size: 16px;
+    line-height: 24px; 
+    font-weight: 400;
+    letter-spacing: 0.15px;
+    margin-bottom: 10px;
+    color: ${MainColor.BLACK70};
+`
+const HeaderOption = styled.TouchableOpacity`
+    flex-direction: row;
+    justify-content: space-between;
+    background-color: #f2f3f5;
+    height:35px;
+    width: 95px;
+    padding: 5px 5px 0 10px;
+    position: relative;
+    top: -5px;
+`
+const HeaderOptionText = styled.Text`
+    font-size: 14px;
+    line-height: 24px; 
+    font-weight: 400;
+    letter-spacing: 0.15px;
+    margin-bottom: 10px;
+    color: ${MainColor.BLACK70};
+    margin-right: 5px;
+    text-align: center;
+`
+const HeaderContents = styled.View`
+
 `
 
-const Home = () => {
-    const [date, setDate] = useState(new Date())
-    const [open, setOpen] = useState(false)
-    const [ list, setList ] = useState(null)
-
-
-    const onPress = async() => {
-      const data = await fetch('http://211.227.151.158:8080/room/getList', {
-        method: 'post',
-        headers: {
-          "Accept": 'application/json',
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          "memberID": "User1"
-        })
-      }).then( res => res.json() )
-
-      console.log( data )
-    } 
+const Home = ({navigation}) => {
+    const dispatch = useDispatch()
 
     return (
-      <Wrapper bounces={false} >
-        <Header>
-          <H24 />
-          <Hot_Bunning>
-            <Text>HOT RUNNING</Text>
-          </Hot_Bunning>
-          <H2 />
-          <Midterm />
-          <H16 />
-          <Midterm_text />
-          <H29 />
-          <Withme />
-          <H1 />
-          <Total_bunning_group_list />
-          <H14 />
-          <Total_group_list_wrapper>
-            <Total_group_list />
-            <Gugyong />
-          </Total_group_list_wrapper>
-          <H8 />
-          <Group_Image_Wrapper>
-            <Group_Image />
-            <H8 />
-            <Group_Image />
-            <H8 />
-            <Group_Image />
-            
-          </Group_Image_Wrapper>
-          <H40 />
-          <Total_group />
-          <Recent />
-          <H11 />
-          <Category_list_wrapper>
-            <H88_8_0_8_16 />
-          </Category_list_wrapper>
-        </Header>
-      </Wrapper>
-      );
+        <Wrapper  >
+            <BurningContainer>
+                <BurningHeader>
+                    <SmallHeader>HOT BURNING</SmallHeader>
+                    <BigHeader>중간고사 같이</BigHeader>
+                    <BigHeader>준비할 사람 모여람!</BigHeader>
+                </BurningHeader>
+
+                <BurningContent>
+                    <ContentText>벛꽃의 꽃말은 중간고사라G...</ContentText>
+                    <ContentText>도서관에서 같이 공부할 사람?</ContentText>
+                </BurningContent>
+
+                <BurningButtonBox >
+                        <BurningButtonText>
+                            함께하기
+                        </BurningButtonText>
+                        <LongRightIcon widht={24} height={24}  />
+                </BurningButtonBox>
+                <BurningButtonuUnderText>총 기말 모임 N개</BurningButtonuUnderText>
+                
+
+            </BurningContainer>
+
+            <CurrentContainer>
+                <View style={{ flexDirection: 'row',  justifyContent: 'space-between', alignItems:'center' }} >
+                    <CurrentHeader>219명이 현재 모임에 참여중이G~</CurrentHeader>
+                    <TouchableOpacity style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', right:4, bottom:4 }} >
+                        <Text style={{ fontFamily: 'Noto500', fontSize:12, color: '#676767',marginRight: 4}} >구경가기</Text>
+                        <RightIcon width={12} height={12} />
+                    </TouchableOpacity>
+                </View>
+                <CurrentContents horizontal={true} bounces={false} showsHorizontalScrollIndicator={false} >
+                    <CurrentContent>
+                        <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
+                            <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >운동</Text>
+                        </View>
+                        <View style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', bottom:4, left:8}} >
+                            <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:14, color: MainColor.Banana }} >21</Text>
+                            <View>
+                                <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
+                            </View>
+                        </View>
+
+                    </CurrentContent>
+                    <CurrentContent>
+                        <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
+                            <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >오락</Text>
+                        </View>
+                        <View style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', bottom:4, left:8}} >
+                            <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:14, color: MainColor.Banana }} >21</Text>
+                            <View>
+                                <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
+                            </View>
+                        </View>
+                    </CurrentContent>
+                    <CurrentContent>
+                        <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
+                            <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >공부</Text>
+                        </View>
+                        <View style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', bottom:4, left:8}} >
+                            <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:14, color: MainColor.Banana }} >21</Text>
+                            <View>
+                                <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
+                            </View>
+                        </View>
+                    </CurrentContent>
+                    <CurrentContent>
+                        <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
+                            <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >사진</Text>
+                        </View>
+                        <View style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', bottom:4, left:8}} >
+                            <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:14, color: MainColor.Banana }} >21</Text>
+                            <View>
+                                <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
+                            </View>
+                        </View>
+                    </CurrentContent>
+                </CurrentContents>
+            </CurrentContainer>
+
+            <GroupContainer>
+                <GroupHeader>
+                    <HeaderText>전체모임</HeaderText>
+                    <HeaderOption>
+                        <HeaderOptionText>최신순</HeaderOptionText>
+                        <AntDesign name="down" size={22} color={MainColor.fontColor} />
+                    </HeaderOption>
+                </GroupHeader>                                                                                  
+                    <HeaderContents>
+                        <List />
+                    </HeaderContents>
+            </GroupContainer>
+        </Wrapper>
+    );
+  
 }
 
-
-const H1 = styled.View`
-    width:1px;
-    height:1px;
-    backgroundColor:yellow;
-`;
-
-const H2 = styled.View`
-    width:2px;
-    height:2px;
-    backgroundColor:yellow;
-`;
-
-const H8 = styled.View`
-    width:8px;
-    height:8px;
-    backgroundColor:yellow;
-`;
-const H11 = styled.View`
-    width:11px;
-    height:11px;
-    backgroundColor:yellow;
-`;
-const H14 = styled.View`
-    width:14px;
-    height:14px;
-    backgroundColor:yellow;
-`;
-const H16 = styled.View`
-    width:16px;
-    height:16px;
-    backgroundColor:yellow;
-`;
-const H22 = styled.View`
-    width:16px;
-    height:22px;
-    backgroundColor:red;
-`;
-const H24 = styled.View`
-    width:100%;
-    height:24px;
-    backgroundColor:blue;
-`;
-const H29 = styled.View`
-    width:16px;
-    height:29px;
-    backgroundColor:red;
-`;
-const H40 = styled.View`
-    width:40px;
-    height:40px;
-    backgroundColor:white;
-`;
-const H40_0_4_0_4 = styled.View`
-    width:173px;
-    height:40px;
-    backgroundColor:red;
-    margin:0px 4px 0px 4px;
-`;
-const H40_0_8_0_8 = styled.View`
-    width:100%;
-    height:40px;
-    backgroundColor:red;
-    padding:0px 8px 0px 8px;
-`;
-const H48 = styled.View`
-    width:100%;
-    height:48px;
-    backgroundColor:green;
-`;
-const H55_24 = styled.View`
-    width:55px;
-    height:24px;
-    backgroundColor:green;
-`;
-const H88_8_0_8_16 = styled.View`
-    width:88px;
-    height:88px;
-    backgroundColor:green;
-    padding: 8px 0px 8px 16px;
-`;
-
-const Text_12_16_12_16 = styled.Text`
-    padding:12px 16px 12px 16px;
-`;
-const Group_Image = styled.View`
-    height:112px;
-    width:128px;
-    backgroundColor:red;
-    
-`;
-const Group_Image_Wrapper = styled.View`
-    height:112px;
-    width:256px;
-    backgroundColor:gray;
-    flex-direction: row;
-`;
-
-/* Rectangle 139 */
-
-const Category_list = styled.View`
-    width: 128.03px;
-    height: 112px;
-    
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 2px;
-`
-
-const Total_group = styled.View`
-    width: 65px;
-    height: 24px;
-    left: 16.09px;
-    font-family: LotteMartDreamBold;
-    font-style: normal;
-    font-weight: normal;
-    font-size: 16px;
-    line-height: 24px;
-    /* identical to box height, or 150% */
-    letter-spacing: 0.15px;
-    color: rgba(0, 0, 0, 0.87);
-    backgroundColor:red;
-`
-const Recent = styled.View`
-    width: 86px;
-    height: 32px;
-    left: 257.11px;
-    background: #F2F3F5;
-    border: 1px solid #EDEDED;
-    border-radius: 2px;
-`
-const Total_group_List = styled.View`
-    width: 360px;
-    height: 104px;
-    left: 0px;
-    top: 0px;
-    background: black;
-`
-const Total_group_list_wrapper = styled.View`
-    width: 100%;
-    height: 24px;
-    left: 0px;
-    top: 0px;
-    background: blue;
-    flexDirection:row;
-`
-const Category_list_wrapper = styled.View`
-    width: 100%;
-    height: 112px;
-    left: 15.87px;
-    background: rgba(0, 0, 0, 0.25);
-    border-radius: 2px;
-
-    flexDirection:row;
-`
-const Gugyong = styled.View`
-    position: absolute;
-    width: 45.09px;
-    height: 23px;
-    left: 286.39px;
-    font-family: Noto Sans KR;
-    font-style: normal;
-    font-weight: 500;
-    font-size: 12px;
-    line-height: 24px;
-    text-align: right;
-    letter-spacing: 0.15px;
-    color: black;
-`
 export default Home;

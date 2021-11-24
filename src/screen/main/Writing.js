@@ -1,10 +1,11 @@
 import React, { useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Text, View,Button, TouchableOpacity, Keyboard, TextInput, Alert } from 'react-native'
+import { Text, View,Button, TouchableOpacity, Keyboard, TextInput, Alert, Image } from 'react-native'
 import { AntDesign, Ionicons } from '@expo/vector-icons';
 import { DatePickers } from '../../components/DatePicker';
 import { MainColor } from '../../components/Color'
 import { ImagePick } from '../../components/Image';
+import { useSelector } from 'react-redux';
 
 const MainCategory = [ '사진/영상', '게임/오락', '운동/스포츠', '공부/스터디' , '식사/술', '자유주제']
 
@@ -16,7 +17,7 @@ const Wrapper = styled.ScrollView`
 const CategoryContainer = styled.View`
     margin-top: 8%;
 `
-const CategoryHeader = styled.View`
+const CategoryHeader = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: space-between;
     padding: 0 5% 5% 5%;
@@ -25,7 +26,7 @@ const CategoryTitle = styled.Text`
     font-size: 18px;
     font-family: 'Dream';
 `
-const CategoryToggle = styled.TouchableOpacity`
+const CategoryToggle = styled.View`
 
 `
 const CategoryContents = styled.View`
@@ -43,7 +44,7 @@ const CategoryContent = styled.View`
 const InfoContainer = styled.View`
 margin-top: 3%;
 `
-const InfoHeader = styled.View`
+const InfoHeader = styled.TouchableOpacity`
 flex-direction: row;
 justify-content: space-between;
 padding: 0 5% 5% 5%;
@@ -69,7 +70,7 @@ const InfoCountButton = styled.TouchableOpacity`
 const PrefContainer = styled.View`
 margin-top: 3%;
 `
-const PrefHeader = styled.View`
+const PrefHeader = styled.TouchableOpacity`
 flex-direction: row;
 justify-content: space-between;
 padding: 0 5% 5% 5%;
@@ -118,6 +119,8 @@ const CreateButton = styled.TouchableOpacity`
 `
 
 const Writing = ({ navigation }) => {
+    const user = useSelector( (state) => state.loginout.user)
+    console.log(user.id) 
     const [ firstToggle, setFirstToggle] = useState(true)
     const [ secondToggle, setSecondToggle] = useState(false)
     const [ thirdToggle, setThirdToggle] = useState(false)
@@ -130,8 +133,8 @@ const Writing = ({ navigation }) => {
     const [ beforeDay, setBeforeDay ] = useState(new Date()) // 시작날짜
     const [ afterDay, setAfterDay ] = useState(null) // 끝나는 날짜
     const [ count, setCount ] = useState(2); // 모집인원 수
-    const [ firstOption, setFirstOption ] = useState(false); // 선호 옵션 선택
-    const [ secondOption, setSecondOption ] = useState(false); // 선호 옵션 선택
+    const [ firstOption, setFirstOption ] = useState(null); // 선호 옵션 선택
+    const [ secondOption, setSecondOption ] = useState(null); // 선호 옵션 선택
     
 
     const refresh = () => {
@@ -167,9 +170,8 @@ const Writing = ({ navigation }) => {
         formData.append('poster', {
           name: new Date() + '_poster',
           uri: Image,
-          type: 'image/jpg'
+          type: 'image/jpg',
         })
-        console.log(JSON.stringify(formData))
       }
     
 
@@ -187,7 +189,8 @@ const Writing = ({ navigation }) => {
 
     const onPressMakingGroup = async() => {
         try {
-            dataValidation()
+            dataValidation() // 유효성 검사
+            unLoadImage(image) // 이미지 formdata화
 
             const data = await fetch('http://211.227.151.158:8080/room/register', {
                 method: 'post',
@@ -196,40 +199,45 @@ const Writing = ({ navigation }) => {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "category_id" : selected === null ? null : selected + 1 , // 카테고리 번호
+                    "categoryID" : selected + 1 , // 카테고리 번호
                     "title" : name,      // 모임(방) 이름
                     "place" : area,         // 활동지
                     "periodic" : period,      // 정기 모임이면 true 단기 모임이면 false
-                    "endDate" : "2021-11-30",
+                    "startDate" : "2021-12-24",   // 모임 시작 날짜
+                    "endDate" : "2021-12-25",   // 모임 종료 날짜
                     "frequency": count,    // 모임 종료 날짜
-                    "max_People" : count,      // 최대 인원
-                    "prefer" : `${firstOption ? firstOption : null}, ${secondOption ? secondOption : null}`,   // 선호 옵션
-                    "member_id" : "User1",      // 방 생성하는 사람 id(방장)
+                    "maxPeople" : count,      // 최대 인원
+                    "prefer" : `${firstOption ? firstOption : null}_${secondOption ? secondOption : null}`,   // 선호 옵션
+                    "memberID" : user.id,      // 방 생성하는 사람 id(방장)
                     })
             }).then( res => res.json() ).catch( e => console.log("실패"))
-            unLoadImage(image)
             console.log("api 호출: ",data)
+            if ( data === "OK" ) {
+                Alert.alert("등록!")
+                navigation.pop()
+            }
             
         } catch (error) {
             console.log(error)
             Alert.alert('정보들을 입력해주세요.')
         }
     }
+
     return (
         <Wrapper bounces={false} onPress={Keyboard.dismiss} >
                 {/* 카테고리 */}                
                 <CategoryContainer>
-                    <CategoryHeader>   
+                    <CategoryHeader onPress={ () => {
+                            setFirstToggle(true)
+                            setSecondToggle(false)
+                            setThirdToggle(false)
+                            } }  >   
                         <CategoryTitle>모임 카테고리</CategoryTitle>
                         {firstToggle ? 
                         <CategoryToggle >
                             <AntDesign name="down" size={25} color="black" />
                         </CategoryToggle> :
-                        <CategoryToggle onPress={ () => {
-                            setFirstToggle(true)
-                            setSecondToggle(false)
-                            setThirdToggle(false)
-                            } } >
+                        <CategoryToggle >
                             <AntDesign name="left" size={25} color="black" />
                         </CategoryToggle>
                         }
@@ -260,17 +268,17 @@ const Writing = ({ navigation }) => {
                 </CategoryContainer>
                 {/* 기본정보 */}
                 <InfoContainer>
-                    <InfoHeader>   
+                    <InfoHeader onPress={ () => {
+                                setSecondToggle(true)
+                                setFirstToggle(false)
+                                setThirdToggle(false)
+                                }}  >   
                             <CategoryTitle>모임 기본정보</CategoryTitle>
                             {secondToggle ? 
                             <CategoryToggle>
                                 <AntDesign name="down" size={25} color="black" />
                             </CategoryToggle> :
-                            <CategoryToggle onPress={ () => {
-                                setSecondToggle(true)
-                                setFirstToggle(false)
-                                setThirdToggle(false)
-                                } } >
+                            <CategoryToggle >
                                 <AntDesign name="left" size={25} color="black" />
                             </CategoryToggle>
                             }
@@ -281,12 +289,12 @@ const Writing = ({ navigation }) => {
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14 }} >모임명</Text>
-                                <TextInput onChangeText={(text) => setName(text)}  value={name} placeholder='모임명을 적어주세요' maxLength={15} style={{ width: '80%', fontFamily: 'Noto400', fontSize: 12, height: 40,padding: 10 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2 }}  ></TextInput>
+                                <TextInput onChangeText={(text) => setName(text)}  value={name} placeholder='모임명을 적어주세요' maxLength={15} style={{ width: '80%', fontFamily: 'Noto400', fontSize: 12, height: 40,padding: 10 , paddingTop: 0, paddingBottom: 0,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2, alignItems: 'center', justifyContent: 'center' }}  ></TextInput>
                             </PrefContent>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: MainColor.BLACK70, fontFamily: 'Noto500', fontSize: 14 }}  >활동지</Text>
-                                <TextInput onChangeText={(text) => setArea(text)} value={area} placeholder='활동 장소를 적어주세요' style={{ width: '80%', height: 40, fontFamily: 'Noto400', fontSize: 12,padding: 10 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2 }}  ></TextInput>
+                                <TextInput onChangeText={(text) => setArea(text)} value={area} placeholder='활동 장소를 적어주세요' style={{ width: '80%', height: 40, fontFamily: 'Noto400', fontSize: 12,padding: 10 ,backgroundColor: 'white', paddingTop: 0, paddingBottom: 0,marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2 }}  ></TextInput>
                             </PrefContent>
                             <PrefContent>
                                 <AntDesign name="down" size={25} color="black" style={{ marginRight: 10 }} />
@@ -297,7 +305,7 @@ const Writing = ({ navigation }) => {
                                         <Text style={{ fontFamily: 'Noto400', fontSize: 12 }} >
                                         {image 
                                           ? 
-                                        `${image.substring(image.lastIndexOf("ImagePicker")+12).substr(0,15)}...${image.substr(-4)}`
+                                        `${image.substring(image.lastIndexOf("/")+1).substr(0,15)}...${image.substr(-4)}`
                                           :
                                         null    
                                         }
@@ -376,17 +384,17 @@ const Writing = ({ navigation }) => {
                 </InfoContainer>
                 {/* 선호옵션 */}
                 <PrefContainer>
-                    <PrefHeader>   
+                    <PrefHeader  onPress={ () => {
+                                setThirdToggle(true)
+                                setSecondToggle(false)
+                                setFirstToggle(false)
+                                } } >   
                             <CategoryTitle>선호 옵션</CategoryTitle>
                             {thirdToggle ? 
                             <CategoryToggle >
                                 <AntDesign name="down" size={25} color="black" />
                             </CategoryToggle> :
-                            <CategoryToggle onPress={ () => {
-                                setThirdToggle(true)
-                                setSecondToggle(false)
-                                setFirstToggle(false)
-                                } } >
+                            <CategoryToggle >
                                 <AntDesign name="left" size={25} color="black" />
                             </CategoryToggle>
                             }
@@ -395,13 +403,13 @@ const Writing = ({ navigation }) => {
                     <OptionWrapper>
                     <OptionContioner  >
                         <OptionContent onPress={ () => setFirstOption( firstOption === null ? "동성" : null  ) } >
-                            <AntDesign name="meh" size={48} color={ firstOption ? '#FFd515' : 'black'}/>
+                            <AntDesign name="meh" size={48} color={ firstOption === "동성" ? '#FFd515' : 'black'}/>
                             <View style={{ position:'absolute', top:10, right: 10}} >
                                 <AntDesign name="checkcircle" size={24} color={ firstOption ? '#FFd515' : 'black'}/>
                             </View>
                         </OptionContent>
                         <OptionContent onPress={ () => setSecondOption( secondOption === null ? "동갑" : null )} >
-                            <AntDesign name="meh" size={48} color={ secondOption ? '#FFd515' : 'black'}/>
+                            <AntDesign name="meh" size={48} color={ secondOption === "동갑" ? '#FFd515' : 'black'}/>
                             <View style={{ position:'absolute', top:10, right: 10}} >
                                 <AntDesign name="checkcircle" size={24} color={ secondOption ? '#FFd515' : 'black'}/>
                             </View>

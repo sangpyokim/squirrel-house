@@ -19,6 +19,7 @@ const Container = styled.View`
     flex-direction: row;
     background-color: transparent;
     z-index: 10;
+    height: 56px;
 `
 
 
@@ -41,7 +42,7 @@ const TabBar = (props,{ state}) => {
 
     return(
         <>
-            <Svg style={{ width: '100%', height:'8%',
+            <Svg style={{ width: '100%', height:'56',
                 backgroundColor: 'transparent', 
                 position:'absolute', 
                 bottom: 0,

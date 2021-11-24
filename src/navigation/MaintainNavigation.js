@@ -11,15 +11,17 @@ const Tab = createMaterialTopTabNavigator();
 
 const Width = Dimensions.get('window').width * 0.3
 
+
 const MaintainNavigation = () => {
     return (
         <Tab.Navigator 
         screenOptions={{
-            tabBarLabelStyle: {fontSize: 16, letterSpacing: 0.15 },
-            tabBarItemStyle: { width: Width, height: 50},
+            tabBarStyle: { paddingLeft: 16, elevation: 0 },
+            tabBarLabelStyle: {fontSize: 16, letterSpacing: 0.15, fontFamily: 'Dream' },
+            tabBarItemStyle: { width: 96, height: 50},
             tabBarScrollEnabled: true,
             tabBarBounces: false,
-            tabBarIndicatorStyle: { backgroundColor: MainColor.Banana} // 
+            tabBarIndicatorStyle: { backgroundColor: MainColor.Banana, width: 96, justifyContent: 'center', marginLeft:16 }, // 
         }}        
         >
             <Tab.Screen name="활동중" component={Ing} options={{ title: '활동중' }} />

@@ -42,11 +42,12 @@ const MainTabBottomNav = () => {
                     title: '다람집',
                     headerTitleAlign: 'center',
                     headerStyle:{
-                        height:56
+                        height:56,
+                        
                     },
                     headerTitleStyle: { 
                         fontFamily: 'Dream',
-                        color: MainColor.BLACK, 
+                        color: 'black', 
                         fontSize: 20, 
                     }  }} tabBar={ props => <TabBar {...props} />} 
                     >
@@ -55,6 +56,7 @@ const MainTabBottomNav = () => {
                     options={{ 
                         headerRight: null,
                         headerTitle:'모집임박',
+                        headerTitleStyle:{ color: MainColor.BLACK, fontFamily: 'Dream',   },
                         headerStyle: { backgroundColor: MainColor.Banana, height: 56 } }} />
                 <Tab.Screen name="Fake" component={Fake} />
                 <Tab.Screen name="내모임관리" component={MaintainNavigation} />
