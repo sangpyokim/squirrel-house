@@ -1,15 +1,17 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Dimensions, TouchableOpacity, View, Text  } from 'react-native';
 import styled from 'styled-components';
-import { AntDesign } from '@expo/vector-icons';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainColor } from '../../../components/Color'
 import RightIcon from '../../../asset/2_page/right_icon.svg'
 import LongRightIcon from '../../../asset/2_page/long_right_icon.svg'
-import List from '../../../components/List'
+import BurningImage from '../../../asset/common/5_illustration/ill_bunning.svg'
+
 
 
 const Width = Dimensions.get('window').width
+
+
 
 const Wrapper = styled.ScrollView`
     width: ${Width}px;
@@ -153,11 +155,35 @@ const HeaderContents = styled.View`
 
 const Home = ({navigation}) => {
     const dispatch = useDispatch()
+    const user = useSelector( state => state.loginout.user)
+
+    const [ groupLists, setGroupLists ] = useState(null)
+
+    const getGroupLists = async() => {
+        const data = await fetch('http://211.227.151.158:8080/room/getList', {
+                method: 'post',
+                headers: {
+                  "Accept": 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "id" : user.id,      // 방 생성하는 사람 id(방장)
+                    })
+            }).then( res => res.json() ).catch( e => console.log("실패"))
+            console.log("api 호출: ", data)
+            setGroupLists( data )
+    }
+
+    useEffect( () => {
+    }, [])    
 
     return (
         <Wrapper  >
             <BurningContainer>
                 <BurningHeader>
+                    <View style={{position:'absolute', right:0}} >
+                        <BurningImage />
+                    </View>
                     <SmallHeader>HOT BURNING</SmallHeader>
                     <BigHeader>중간고사 같이</BigHeader>
                     <BigHeader>준비할 사람 모여람!</BigHeader>
@@ -168,15 +194,13 @@ const Home = ({navigation}) => {
                     <ContentText>도서관에서 같이 공부할 사람?</ContentText>
                 </BurningContent>
 
-                <BurningButtonBox >
+                <BurningButtonBox onPress={() => getGroupLists()} >
                         <BurningButtonText>
                             함께하기
                         </BurningButtonText>
                         <LongRightIcon widht={24} height={24}  />
                 </BurningButtonBox>
-                <BurningButtonuUnderText>총 기말 모임 N개</BurningButtonuUnderText>
-                
-
+                <BurningButtonuUnderText>총 중간 모임 N개</BurningButtonuUnderText>
             </BurningContainer>
 
             <CurrentContainer>
@@ -241,11 +265,10 @@ const Home = ({navigation}) => {
                     <HeaderText>전체모임</HeaderText>
                     <HeaderOption>
                         <HeaderOptionText>최신순</HeaderOptionText>
-                        <AntDesign name="down" size={22} color={MainColor.fontColor} />
                     </HeaderOption>
                 </GroupHeader>                                                                                  
                     <HeaderContents>
-                        <List />
+
                     </HeaderContents>
             </GroupContainer>
         </Wrapper>

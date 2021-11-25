@@ -1,5 +1,5 @@
 import React, {  useState } from 'react'
-import { Dimensions,  } from 'react-native'
+import { Dimensions, Platform,  } from 'react-native'
 import styled from 'styled-components'
 import Tab from './Tab'
 import WriteTab from './WriteTab'
@@ -42,7 +42,7 @@ const TabBar = (props,{ state}) => {
 
     return(
         <>
-            <Svg style={{ width: '100%', height:'56',
+            <Svg style={{ width: '100%', height: Platform.OS === 'android' ?'56' : '60',
                 backgroundColor: 'transparent', 
                 position:'absolute', 
                 bottom: 0,
@@ -75,7 +75,7 @@ const TabBar = (props,{ state}) => {
                 <WriteTab 
                     tab={routes[2]} 
                     icon={null} 
-                    onPress={() => navigation.navigate('Writing')} 
+                    onPress={() => navigation.navigate('모임만들기')} 
                     key={routes[2].key} 
                 />
                 <Tab 

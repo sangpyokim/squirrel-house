@@ -16,12 +16,11 @@ const MainStackNav = () => {
                 name="MainTabBottomNav" 
                 component={MainTabBottomNav} />
             <Stack.Screen 
-                name="Writing" 
+                name="모임만들기" 
                 component={Writing} 
                 options={{
                     headerShown: true, 
                     headerTintColor: 'black',
-                    headerTitle: '모임 만들기',
                     presentation: 'card',
                     headerTransparent: false,
                     headerBackTitleVisible: false,                           

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Alert, BackHandler, SafeAreaView } from 'react-native';
+import { QueryClient, QueryClientProvider } from 'react-query'
 import SplashScreen from 'react-native-splash-screen';
 
 import { Provider } from 'react-redux'
@@ -11,6 +12,8 @@ import Logging from './src/navigation/LoggingNav';
 import MainStackNav from './src/navigation/MainStackNav';
 
 import { useFonts } from 'expo-font'
+
+const queryClient = new QueryClient()
 
 export default function App() {
   const [ logging , setLogging ] = useState(false) // 임시, redux로 isloggedin 상태변경해야함
@@ -34,7 +37,6 @@ export default function App() {
   useEffect( () => {
       // 불러와야할 에셋, api들을 불러옴
       // loaded === true && 저장된 유저정보 === true, 유저정보 리덕스에 저장되면 메인페이지로 이동 그렇지않으면 로그인페이지
-      console.log(fontsLoaded)
       if( fontsLoaded === true ) {
         setLogging(true)
         SplashScreen.hide()
@@ -46,7 +48,7 @@ export default function App() {
 
 
   return(
-    <>
+    <QueryClientProvider client={queryClient} >
     <SafeAreaView style={{ backgroundColor: 'transparent',  }} >
     </SafeAreaView>
     <Provider store={store} >
@@ -59,7 +61,7 @@ export default function App() {
       }
     </NavigationContainer>
     </Provider>
-    </>
+    </QueryClientProvider>
   )
 
 

@@ -1,10 +1,12 @@
-import React from 'react'
-import { View, Text, Dimensions, TouchableOpacity } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { View, Text, Dimensions, ScrollView } from 'react-native'
 import styled from 'styled-components'
 import { MainColor } from '../../components/Color'
 import Like from '../../asset/common/list_icon/list_icon_4_like.svg';
 import IllHot from '../../asset/common/5_illustration/ill_hot.svg';
+
 import List from '../../components/List'
+import { useSelector } from 'react-redux';
 
 const Width = Dimensions.get('window').width
 
@@ -26,12 +28,8 @@ const TitleContainerTitle = styled.View`
     justify-content:flex-end;
     margin-bottom: 8px;
 `
-const Contents = styled.View`
-    width: 100%;
-    height: 104px;
-    background-color: white;
-    padding: 8px 16px;
-    flex-direction: row;
+const Contents = styled.ScrollView`
+
 `
 const BackGroundImage = styled.View`
     width: 88px;
@@ -77,15 +75,45 @@ const Tag = styled.Text`
     color: ${MainColor.BANANABOX};
 `
 
+
+
 const HotGroup = () => {
+    const user = useSelector( state => state.loginout.user)
+
+    const [ loading, setLoading ] = useState(true)
+    const [ lists, setLists ] = useState()
+    const [ time, setTime ] = useState(new Date())
+
+    const getAllLists = async() => {
+        const data = await fetch('http://192.168.1.80:8080/room/getList', {
+                method: 'post',
+                headers: {
+                  "Accept": 'application/json',
+                  'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    "memberID" : "User1",      // 방 생성하는 사람 id(방장)
+                    })
+            }).then( res => res.json() ).catch( e => console.log(e))
+            setLists(data)
+
+            setLoading(false)
+    }
+    useEffect( () => {
+        getAllLists()
+    }, [])
+
     return (
-        <View>
+        <ScrollView bounces={false} >
             <FilterContainer>
                 <Text>필터 넣을거임</Text>
             </FilterContainer>
             <TitleContainer>
                 <TitleContainerTitle>
-                    <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24}} >실시간 HOT 10</Text>
+                    <View style={{ flexDirection: 'row' }} >
+                        <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24}} >실시간 </Text>
+                        <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24, color: MainColor.Banana}} >HOT 10</Text>
+                    </View>
                     <Text style={{ height: 20, fontFamily: 'Noto400', fontSize:10 }} >11.09 07시 02분 기준</Text>
                 </TitleContainerTitle>
                 <View style={{ position: 'absolute', right: 16, bottom: -4 }} >
@@ -93,10 +121,16 @@ const HotGroup = () => {
                 </View>
             </TitleContainer>
 
-            <List />
-            <List />
-
-        </View>
+            {loading 
+              ? 
+                null 
+              : 
+              lists.map( (res, index) => (
+                  <List lists={res} key={index} />
+              ) )
+            }
+            <View style={{ height:50 }} />
+        </ScrollView>
     )
 }
 

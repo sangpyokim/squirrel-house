@@ -1,5 +1,5 @@
-import React from 'react'
-import { Dimensions ,Text, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { Dimensions ,Text, TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { MainColor } from '../../components/Color'
@@ -7,15 +7,15 @@ import Chat from '../../asset/4_page/chat.svg'
 import Goal from '../../asset/4_page/goal.svg'
 import Out from '../../asset/4_page/out.svg'
 import { ICONSIZE } from '../../components/Size'
-
+import D_Day from '../../components/D_Day'
 
 
 const Width = Dimensions.get('window').width
 
 
 const  GroupCount = styled.View`
-    justify-content:center;
     margin-left: 16px;
+    flex-direction: row;
 `
 const Wrapper = styled.ScrollView`
     background-color: ${MainColor.BACKGROUND};
@@ -23,7 +23,7 @@ const Wrapper = styled.ScrollView`
 `
 const Contents = styled.View`
     background-color:white;
-    padding: 16px;
+    padding: 0 16px 16px 16px;
     width: 100%;
 `
 const Content = styled.View`
@@ -31,6 +31,8 @@ const Content = styled.View`
     height: 184px;
     flex-direction: row;
     justify-content: space-between;
+    margin-bottom: 16px;
+    margin-top: 16px;
 `
 const PostImage = styled.View`
     height:100%;
@@ -53,7 +55,8 @@ const ContentHeaderView = styled.View`
 `
 const ContentHeaderViewText = styled.View`
     width:50px;
-    background-color: ${MainColor.Banana};
+    height: 16px;
+    background-color: ${ props => props.backgroundColor ? MainColor.Banana : 'black' };
     align-items:center;
     justify-content: center;
     border-radius:2px;
@@ -68,48 +71,116 @@ const ContentBottomView = styled.View`
     flex-direction: row;
 `
 
+
 const ing = () => {
     const user = useSelector( (state) => state.loginout.user)
+
+    const [ loading, setLoading ] = useState(true)
+    const [ myRoomList, setMyRoomList ] = useState(null)
+
+
+    const getMyRoomList = async() => {
+        const data = await fetch('http://211.227.151.158:8080/room/myRoomList', {
+            method: 'post',
+            headers: {
+              "Accept": 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "memberID" : user.id,      // 방 생성하는 사람 id(방장)
+                })
+        }).then( res => res.json() ).catch( e => console.log("실패"))
+        setMyRoomList(data)
+        setLoading(false)
+        console.log(data[0])
+    }
     
-    // 방 리스트 가져오는 api
-    // 방들어가는 api, 나가는 api
+    useEffect( () => {
+        getMyRoomList()
+        // 방 리스트 가져오는 api
+        // 방들어가는 api, 나가는 api
+
+    }, [])
+
+    const onPressOutGroup = async(id) => {
+
+        const data = await fetch('http://211.227.151.158:8080/memberInRoom/outRoom', {
+            method: 'put',
+            headers: {
+              "Accept": 'application/json',
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "roomID" : id,
+                "memberID" : user.id,      // 방 생성하는 사람 id(방장)
+                })
+        }).then( res => res.json() ).catch( e => console.log("실패")) 
+        getMyRoomList()
+        console.log(id,data)
+    }
 
     return (
         <Wrapper>
-            <GroupCount >
-                <Text style={{ fontFamily: 'Noto400', fontSize:12 }} >몇개의 모임 진행중</Text>
-            </GroupCount>
-            <Contents>
-                <Content>
-                    <PostImage />
-                    <ContentBox>
-                        <ContentHeader >
-                            <ContentHeaderView>
-                                <ContentHeaderViewText >
-                                    <Text style={{ color: MainColor.BANANABOX, fontSize: 10, fontFamily: 'Noto500', }} >단기</Text>
-                                </ContentHeaderViewText>
-                            </ContentHeaderView>
-                            <Text style={{ fontFamily: 'Dream', fontSize: 20, marginTop: 8 }} >내일 9시 홈파티</Text>
-                            <View style={{ flexDirection: 'row', justifyContent:'space-between', width: "100%" }} >
-                                <View style={{  alignItems:'center', justifyContent: 'center' }} >
-                                    <Text style={{ color: MainColor.BANANABOX, fontSize: 14, fontFamily: 'Noto500', marginTop:4 }}>단기 1회 모임</Text>
-                                </View>
-                            </View>
-                        </ContentHeader>
+            {myRoomList === null 
+              ? 
+                null
+              :
+                loading === true
+                  ? 
+                    <Text>로딩중 . . .</Text>
+                  : 
+            <>  
+                <GroupCount >
+                    <Text style={{ fontFamily: 'Noto400', fontSize:12, letterSpacing: 0.15 }} >{myRoomList.length}</Text>
+                    <Text style={{ fontFamily: 'Noto400', fontSize:12, color: MainColor.BLACK38, letterSpacing: 0.15 }} >개의 모임 진행중</Text>
+                </GroupCount>
+                <Contents>
+                {myRoomList.map( (list, index) => (
+                    <Content key={ index } >
+                        <PostImage />
+                        <ContentBox>
+                            <ContentHeader >
+                                <ContentHeaderView >
+                                    <ContentHeaderViewText backgroundColor={list.periodic}  >
+                                        <Text style={{ color: list.periodic ? MainColor.Banana : MainColor.BLACKBOX, fontSize: 10, fontFamily: 'Noto500', lineHeight: 16 }} >{list.periodic ? "단기" : "정기"}</Text>
+                                    </ContentHeaderViewText>
+                                </ContentHeaderView>
 
-                        <ContentBottom>
-                            <ContentBottomView >
-                                <View 
-                                    style={{ width: '99%', height:2, backgroundColor:MainColor.GRAY2, position:'absolute', bottom:-1 }} />
-                                <View 
-                                    style={{ width: '50%', height:2, backgroundColor:MainColor.Banana, position:'absolute', bottom:-1 }} />
-                                <Text style={{ fontFamily: 'Noto400', fontSize: 12, color: MainColor.GRAY2, }} >활동 시작전이에요.</Text>
-                                <Goal width={ICONSIZE.BOTTOM_NAV_HEADER_ICON} height={ICONSIZE.BOTTOM_NAV_HEADER_ICON} fill={MainColor.BLACK38} />
-                            </ContentBottomView>
-                        </ContentBottom>
-                    </ContentBox>
-                </Content>
-            </Contents>
+                                <Text style={{ fontFamily: 'Dream', fontSize: 20, marginTop: 8 }} >{list.title}</Text>
+
+                                <View style={{ flexDirection: 'row', justifyContent:'space-between', width: "100%" }} >
+                                    <View style={{  alignItems:'center', justifyContent: 'center' }} >
+                                        <Text style={{ color: MainColor.BANANABOX, fontSize: 14, fontFamily: 'Noto500'  }}>{list.periodic ? `단기 ${list.frequency}회 모임` : `주 ${list.frequency}회 모임`}</Text>
+                                    </View>
+                                </View>
+
+                                <TouchableOpacity style={{ position: 'absolute', top: 0, right:0 }} >
+                                    <Chat width={24} height={24} fill={MainColor.BLACK50} />
+                                </TouchableOpacity>
+                                <TouchableOpacity style={{ position: 'absolute', top: 40, right:0 }} onPress={() => onPressOutGroup(list.id)} >
+                                    <Out width={24} height={24} fill={MainColor.BLACK50} />
+                                </TouchableOpacity>
+                            </ContentHeader>
+
+                            <ContentBottom>
+                                <ContentBottomView >
+                                    <View 
+                                        style={{ width: '99%', height:2, backgroundColor:MainColor.GRAY2, position:'absolute', bottom:-1 }} />
+                                    <View 
+                                        style={{ width: list.periodic ? '0%' : "30%" , height:2, backgroundColor:MainColor.Banana, position:'absolute', bottom:-1 }} />
+                                    <Text style={{ fontFamily: 'Noto400', fontSize: 12, color: MainColor.GRAY2, }} >활동 시작전이에요.</Text>
+                                    <View style={{ position:'absolute', bottom: 2, right: 0 }} >
+                                        <Goal width={ICONSIZE.BOTTOM_NAV_HEADER_ICON} height={ICONSIZE.BOTTOM_NAV_HEADER_ICON} fill={MainColor.BLACK38} />
+                                    </View>
+                                </ContentBottomView>
+                            </ContentBottom>
+                        </ContentBox>
+                        <View style={{ position:'absolute', bottom: -16, left:-16, width: Width, height:1, backgroundColor: '#eee' }} />
+                    </Content>
+                ))}
+                </Contents>
+            </>
+            }
         </Wrapper>
     )
 }
