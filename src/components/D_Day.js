@@ -23,9 +23,9 @@ const Day = styled.Text`
     font-size:12px;
     letter-spacing: 0.15px;
 `
+const month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
 const D_Day = ({endDate}) => {
-    const month = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31]
 
     const monthCul = (num) => {
         let day = 0
@@ -41,13 +41,13 @@ const D_Day = ({endDate}) => {
         const day = dater.substr(2,9).split("-")[0] * 365 + monthCul(dater.substr(2,9).split("-")[1]) + dater.substr(2,9).split("-")[2] * 1
         const endDay = endDate.substr(2,9).split("-")[0] * 365 + monthCul(endDate.substr(2,9).split("-")[1]) + endDate.substr(2,9).split("-")[2] * 1
         
-        if ( endDay - day > 0 ) {
+
+        if ( endDay - day === 1 || endDay - day === 2 ) {
             return `D-${endDay - day}`
-        } else if( endDay - day <= 0 ) {
+        } else {
             return null
-        }else {
-            null
         }
+
     }
 
     useEffect( () => {
@@ -61,5 +61,7 @@ const D_Day = ({endDate}) => {
         </DDay>
     )
 }
+
+
 
 export default D_Day

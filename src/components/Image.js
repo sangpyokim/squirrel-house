@@ -9,7 +9,9 @@ const Container = styled.TouchableOpacity`
     align-items: center;
     justify-content: center;
     background-color: #c4c4c4;
-    border-radius: 2px;
+    height: 32px;
+    border-color:  #E0E0E2;
+    border-width: 1px;
 `
 
 export const ImagePick = ({ setImage }) => {
@@ -18,7 +20,7 @@ export const ImagePick = ({ setImage }) => {
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0.2,
       base64: true,
     });
     const uri = result.base64;
@@ -29,7 +31,7 @@ export const ImagePick = ({ setImage }) => {
   
   return (
     <Container onPress={pickImage} >
-          <Text>사진선택</Text>
+          <Text style={{ fontFamily: "Noto500", color:"#898989", fontSize: 12 }} >사진 선택</Text>
     </Container>
   );
 }

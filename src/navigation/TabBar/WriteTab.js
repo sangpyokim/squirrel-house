@@ -14,6 +14,7 @@ const Container = styled.TouchableOpacity`
     margin:2px;
     position:relative;
     bottom: ${Dimensions.get('window').height * 0.04}px;
+    box-shadow: 0 0 3px rgba(25, 25, 25, 0.4);
     background-color: ${MainColor.Banana};
     width: ${width}px;
     height: ${width}px;

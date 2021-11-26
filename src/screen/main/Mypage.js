@@ -9,21 +9,22 @@ const Mypage = () => {
 
     const unLoadImage = async () => {
         try {
-            const data = await axios.get('http://192.168.1.80:8080/file/getImg/31')
+            const data = await axios.get('http://211.227.151.158:8080/file/getImg/7')
             
-            setUri(data.data.img)
+            setUri(data.data)
 
           } catch (error) {
             console.error(error);
           }
       }
-
+console.log
     return (
         <View>
             <Button title="123" onPress={() => unLoadImage()} />
             <Image 
                 style={{ height: 250, width: 250 }}
-                source={{ uri: `data:image/png;base64,${uri}` }}
+                source={{ uri: uri }}
+                resizeMode= 'cover'
             /> 
             <D_Day endDate={"2021-12-25"} /> 
         </View>

@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, TouchableOpacity, View, Text  } from 'react-native';
+import { Dimensions, TouchableOpacity, View, Text, FlatList  } from 'react-native';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainColor } from '../../../components/Color'
 import RightIcon from '../../../asset/2_page/right_icon.svg'
 import LongRightIcon from '../../../asset/2_page/long_right_icon.svg'
 import BurningImage from '../../../asset/common/5_illustration/ill_bunning.svg'
-
+import List from '../../../components/List';
+import Down from '../../../asset/3_page/flow/flow_down.svg'
 
 
 const Width = Dimensions.get('window').width
@@ -63,6 +64,7 @@ const BurningButtonBox = styled.TouchableOpacity`
     align-items:center;
     padding: 0px 16px;
     text-align: center;
+    box-shadow: 0 0 3px rgba(25, 25, 25, 0.4);
     elevation: 5;
 `
 const BurningButtonText = styled.Text`
@@ -80,7 +82,9 @@ const BurningButtonuUnderText = styled.Text`
     letter-spacing: 0.15px;
     line-height: 24px;
     text-align:right;
-    opacity: 0.4;
+    color: rgba(0, 0, 0, 0.38);
+    opacity: 1;
+    font-family: 'Noto400';
 `
 const CurrentContainer = styled.View`
     width: 100%;
@@ -105,10 +109,10 @@ const CurrentContent = styled.View`
     height:110px;
     background-color: aliceblue;
     margin-right: 8px;
+    border-radius: 2px;
 `
 const GroupContainer = styled.View`
     width: 100%;
-    height: 400px;
     margin-top: 8px;
     background-color: white;    
 `
@@ -122,12 +126,12 @@ const GroupHeader = styled.View`
     border-bottom-color: rgba(33,33,33, 0.08);
 `
 const HeaderText = styled.Text`
+    font-family: "Dream";
     font-size: 16px;
     line-height: 24px; 
     font-weight: 400;
     letter-spacing: 0.15px;
     margin-bottom: 10px;
-    color: ${MainColor.BLACK70};
 `
 const HeaderOption = styled.TouchableOpacity`
     flex-direction: row;
@@ -140,12 +144,12 @@ const HeaderOption = styled.TouchableOpacity`
     top: -5px;
 `
 const HeaderOptionText = styled.Text`
+font-family: 'Noto400';
     font-size: 14px;
     line-height: 24px; 
     font-weight: 400;
     letter-spacing: 0.15px;
     margin-bottom: 10px;
-    color: ${MainColor.BLACK70};
     margin-right: 5px;
     text-align: center;
 `
@@ -157,9 +161,10 @@ const Home = ({navigation}) => {
     const dispatch = useDispatch()
     const user = useSelector( state => state.loginout.user)
 
-    const [ groupLists, setGroupLists ] = useState(null)
+    const [ lists, setLists ] = useState()
+    const [ loading, setLoading ] = useState(true)
 
-    const getGroupLists = async() => {
+    const getAllLists = async() => {
         const data = await fetch('http://211.227.151.158:8080/room/getList', {
                 method: 'post',
                 headers: {
@@ -167,17 +172,21 @@ const Home = ({navigation}) => {
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "id" : user.id,      // 방 생성하는 사람 id(방장)
+                    "memberID" : "User1",      // 방 생성하는 사람 id(방장)
                     })
-            }).then( res => res.json() ).catch( e => console.log("실패"))
-            console.log("api 호출: ", data)
-            setGroupLists( data )
+            }).then( res => res.json() ).catch( e => console.log(e))
+            setLists(data)
+            setLoading(false)
     }
-
     useEffect( () => {
-    }, [])    
-
-    return (
+        getAllLists()
+    }, [])
+return (
+<FlatList 
+    refreshing={loading}
+    onRefresh={() => getAllLists()}
+    data={lists}
+    ListHeaderComponent={
         <Wrapper  >
             <BurningContainer>
                 <BurningHeader>
@@ -194,25 +203,25 @@ const Home = ({navigation}) => {
                     <ContentText>도서관에서 같이 공부할 사람?</ContentText>
                 </BurningContent>
 
-                <BurningButtonBox onPress={() => getGroupLists()} >
+                <BurningButtonBox >
                         <BurningButtonText>
                             함께하기
                         </BurningButtonText>
                         <LongRightIcon widht={24} height={24}  />
                 </BurningButtonBox>
-                <BurningButtonuUnderText>총 중간 모임 N개</BurningButtonuUnderText>
+                <BurningButtonuUnderText>총 중간 모임 <Text style={{ color: '#FFD515', fontFamily: 'Noto400', opacity: 1 }} >N</Text>개</BurningButtonuUnderText>
             </BurningContainer>
 
             <CurrentContainer>
                 <View style={{ flexDirection: 'row',  justifyContent: 'space-between', alignItems:'center' }} >
-                    <CurrentHeader>219명이 현재 모임에 참여중이G~</CurrentHeader>
-                    <TouchableOpacity style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', right:4, bottom:4 }} >
+                    <CurrentHeader><Text style={{ color: "#FFD515", fontFamily: 'Dream' }} >219</Text>명이 현재 모임에 참여중이G~</CurrentHeader>
+                    <TouchableOpacity style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', right:4, bottom:14 }} >
                         <Text style={{ fontFamily: 'Noto500', fontSize:12, color: '#676767',marginRight: 4}} >구경가기</Text>
                         <RightIcon width={12} height={12} />
                     </TouchableOpacity>
                 </View>
                 <CurrentContents horizontal={true} bounces={false} showsHorizontalScrollIndicator={false} >
-                    <CurrentContent>
+                    <CurrentContent >
                         <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
                             <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >운동</Text>
                         </View>
@@ -260,18 +269,23 @@ const Home = ({navigation}) => {
                 </CurrentContents>
             </CurrentContainer>
 
-            <GroupContainer>
-                <GroupHeader>
-                    <HeaderText>전체모임</HeaderText>
-                    <HeaderOption>
-                        <HeaderOptionText>최신순</HeaderOptionText>
-                    </HeaderOption>
-                </GroupHeader>                                                                                  
-                    <HeaderContents>
-
-                    </HeaderContents>
-            </GroupContainer>
-        </Wrapper>
+                <GroupContainer>
+                    <GroupHeader>
+                        <HeaderText style={{ color: '#000000DE' }} >전체모임</HeaderText>
+                        <HeaderOption  >
+                            <HeaderOptionText style={{ fontFamily: 'Noto400', fontSize: 14, color: '#545454DE' }} >최신순</HeaderOptionText>
+                            <Down width={24} height={24} fill="#B6B8BA" />
+                        </HeaderOption>
+                    </GroupHeader>                                                                                  
+                </GroupContainer>
+            </Wrapper>
+}
+    renderItem={ ({item}) => (
+        <List lists={item} navigation={navigation}/>
+        )}
+    ListFooterComponent={<View style={{ height:70, backgroundColor:'white' }} />}
+    keyExtractor={item => item.id}
+/>
     );
   
 }

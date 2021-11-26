@@ -49,7 +49,8 @@ const MainTabBottomNav = () => {
                         fontFamily: 'Dream',
                         color: 'black', 
                         fontSize: 20, 
-                    }  }} tabBar={ props => <TabBar {...props} />} 
+                    }  }} 
+                    tabBar={ props => <TabBar {...props} />} 
                     >
                 <Tab.Screen name="모임찾기" component={MainTopNavigation} options={{ tabBarStyle:{ elevation: 3} }} />
                 <Tab.Screen name="모집임박" component={HotGroup} 

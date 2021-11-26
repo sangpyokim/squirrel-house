@@ -11,11 +11,11 @@ export const DatePickers = ({setDay}) => {
     const [open, setOpen] = useState(false);
 
     const Container = styled.View`
-        border: 1px solid #999;
+        border: 1px solid #DBDBDD;
         background-color: #fff;
         border-radius: 2px ;
         width: 45%;
-        height: 40px;
+        height: 32px;
         align-items:center;
         justify-content:center;
 

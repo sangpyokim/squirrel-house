@@ -20,7 +20,8 @@ export default function App() {
   let [fontsLoaded] = useFonts({
     "Dream": require('./src/asset/fonts/DreamBold.ttf'),
     "Noto500": require('./src/asset/fonts/NotoSansKR-Medium.otf'),
-    "Noto400": require('./src/asset/fonts/NotoSansKR-Regular.otf')
+    "Noto400": require('./src/asset/fonts/NotoSansKR-Regular.otf'),
+    "Noto700": require('./src/asset/fonts/NotoSansKR-Bold.otf')
   })
 
   const backAction = () => {
@@ -39,7 +40,10 @@ export default function App() {
       // loaded === true && 저장된 유저정보 === true, 유저정보 리덕스에 저장되면 메인페이지로 이동 그렇지않으면 로그인페이지
       if( fontsLoaded === true ) {
         setLogging(true)
-        SplashScreen.hide()
+        setTimeout( () => {
+          SplashScreen.hide()
+
+        },3000)
       }
       const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
       return () => backHandler.remove();

@@ -39,7 +39,6 @@ const TabBar = (props,{ state}) => {
     }
 
 
-
     return(
         <>
             <Svg style={{ width: '100%', height: Platform.OS === 'android' ?'56' : '60',

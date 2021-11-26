@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { View, Text, Dimensions, ScrollView } from 'react-native'
+import { View, Text, Dimensions, FlatList, TouchableOpacity } from 'react-native'
 import styled from 'styled-components'
 import { MainColor } from '../../components/Color'
-import Like from '../../asset/common/list_icon/list_icon_4_like.svg';
 import IllHot from '../../asset/common/5_illustration/ill_hot.svg';
 
 import List from '../../components/List'
 import { useSelector } from 'react-redux';
+
+import Filter from '../../asset/5_page/icon_filter.svg'
 
 const Width = Dimensions.get('window').width
 
@@ -14,6 +15,7 @@ const FilterContainer = styled.View`
     height:48px;
     width:100%;
     background-color:white;
+    justify-content:center;
 `
 const TitleContainer = styled.View`
     width:100%;
@@ -77,15 +79,19 @@ const Tag = styled.Text`
 
 
 
-const HotGroup = () => {
+const HotGroup = ({navigation}) => {
     const user = useSelector( state => state.loginout.user)
 
     const [ loading, setLoading ] = useState(true)
     const [ lists, setLists ] = useState()
-    const [ time, setTime ] = useState(new Date())
+    const [ focused, setFocused ] = useState(true)
+    const [ short, setShort ] = useState(false)
+    const [ long, setLong ] = useState(false)
+
 
     const getAllLists = async() => {
-        const data = await fetch('http://192.168.1.80:8080/room/getList', {
+
+        const data = await fetch('http://211.227.151.158:8080/room/getList', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',
@@ -99,38 +105,78 @@ const HotGroup = () => {
 
             setLoading(false)
     }
+
+    
     useEffect( () => {
         getAllLists()
     }, [])
 
     return (
-        <ScrollView bounces={false} >
-            <FilterContainer>
-                <Text>필터 넣을거임</Text>
-            </FilterContainer>
-            <TitleContainer>
-                <TitleContainerTitle>
-                    <View style={{ flexDirection: 'row' }} >
-                        <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24}} >실시간 </Text>
-                        <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24, color: MainColor.Banana}} >HOT 10</Text>
-                    </View>
-                    <Text style={{ height: 20, fontFamily: 'Noto400', fontSize:10 }} >11.09 07시 02분 기준</Text>
-                </TitleContainerTitle>
-                <View style={{ position: 'absolute', right: 16, bottom: -4 }} >
-                <IllHot/>
-                </View>
-            </TitleContainer>
+        <>
+            <FlatList 
+                ListHeaderComponent={
+                    <>
+                    <FilterContainer>
+                        <View style={{ flexDirection:'row', alignItems:'center' }} >
+                            <View style={{ flexDirection: 'row', alignItems:'center',justifyContent:'center', margin:16, marginTop: 8, marginBottom: 8, borderWidth: 1, borderColor:"#E5E6E8", borderStyle: 'solid', width: 62, height: 32 }} >
+                                <Filter width={16} height={16} />
+                                <Text style={{ fontFamily: 'Noto700', fontSize:14, lineHeight: 18, marginLeft: 4, color: MainColor.Banana }} >필터</Text>
+                            </View>
+                            <TouchableOpacity  onPress={() => {
+                                setFocused(true)
+                                setShort(false)
+                                setLong(false)
+                                }} style={{ marginRight: 4, marginLeft:4, backgroundColor: focused ? '#f6f6f6' : 'white', width:36, height:24, alignItems:'center', justifyContent: 'center' }} >
+                                <Text style={{ fontFamily: 'Noto500', fontSize:14, letterSpacing: 0.15, lineHeight: 18, color: focused ? "#212121" : "#9e9e9e" }} >전체</Text>
+                            </TouchableOpacity>
 
-            {loading 
-              ? 
-                null 
-              : 
-              lists.map( (res, index) => (
-                  <List lists={res} key={index} />
-              ) )
-            }
+                            <Text style={{ color: "#9e9e9e" }} >・</Text>
+
+                            <TouchableOpacity onPress={() => {
+                                setFocused(false)
+                                setShort(true)
+                                setLong(false)
+                                }} style={{ marginRight: 4, marginLeft:4, backgroundColor: short ? '#f6f6f6' : 'white', width:36, height:24, alignItems:'center', justifyContent: 'center' }} >
+                                <Text style={{ fontFamily: 'Noto500', fontSize:14, letterSpacing: 0.15, lineHeight: 18, color: short ? "#212121" : "#9e9e9e" }} >단기</Text>
+                            </TouchableOpacity>
+
+                            <Text style={{ color: "#9e9e9e" }} >・</Text>
+
+                            <TouchableOpacity onPress={() => {
+                                setFocused(false)
+                                setShort(false)
+                                setLong(true)
+                                }} style={{ marginRight: 4, marginLeft:4, backgroundColor: long ? '#f6f6f6' : 'white', width:36, height:24, alignItems:'center', justifyContent: 'center' }} >
+                                <Text style={{ fontFamily: 'Noto500', fontSize:14, letterSpacing: 0.15, lineHeight: 18, color: long ? "#212121" : "#9e9e9e" }} >장기</Text>
+                            </TouchableOpacity>
+                        </View>
+                    </FilterContainer>
+                    <TitleContainer>
+                        <TitleContainerTitle>
+                            <View style={{ flexDirection: 'row' }} >
+                                <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24}} >실시간 </Text>
+                                <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24, color: MainColor.Banana}} >HOT</Text>
+                                <Text style={{ fontFamily: 'Dream', fontSize: 20, height:24, color: MainColor.Banana}} >10</Text>
+                            </View>
+                            <Text style={{ height: 20, fontFamily: 'Noto400', fontSize:10, opacity: 0.4 }} >{JSON.stringify(new Date()).substr(6,12).replace("-",'.').replace("T"," ").replace(":", '시 ').replace(':', '분 기준') }</Text>
+                        </TitleContainerTitle>
+                        <View style={{ position: 'absolute', right: 16, bottom: -4 }} >
+                        <IllHot/>
+                        </View>
+                    </TitleContainer>
+            </>
+                }
+                refreshing={loading}
+                onRefresh={() => getAllLists()}
+                data={lists}
+                renderItem={ ({item, index}) => (
+                    <List lists={item} short={short} long={long} navigation={navigation} />
+                 )}
+                keyExtractor={item => item.id}
+            />
+             
             <View style={{ height:50 }} />
-        </ScrollView>
+        </>
     )
 }
 

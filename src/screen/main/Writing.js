@@ -30,9 +30,6 @@ import Back from '../../asset/3_page/flow/back.svg'
 import Check from '../../asset/3_page/flow/check.svg'
 import Down from '../../asset/3_page/flow/flow_down.svg'
 import Up from '../../asset/3_page/flow/flow_up.svg'
-import Right from '../../asset/2_page/right_icon.svg'
-import { useQuery } from 'react-query';
-import { Api } from '../../../api';
 
 
 const MainCategory = [ '사진/영상', '게임/오락', '운동/스포츠', '공부/스터디' , '식사/술', '자유주제']
@@ -43,16 +40,17 @@ const Wrapper = styled.ScrollView`
 `
 //category
 const CategoryContainer = styled.View`
-    margin-top: 8%;
+    margin-top: 24px;
 `
 const CategoryHeader = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 5% 5% 5%;
+    padding: 0 16px 16px 24px;
 `
 const CategoryTitle = styled.Text`
-    font-size: 18px;
+    font-size: 16px;
     font-family: 'Dream';
+    opacity: 0.8;
 `
 const CategoryToggle = styled.View`
 
@@ -61,6 +59,8 @@ const CategoryContents = styled.View`
     flex:1;
     flex-direction: row;
     flex-wrap: wrap;
+    background-color: ${MainColor.BACKGROUND};
+    margin-bottom: 16px;
 `
 const CategoryContent = styled.View`
     background-color: ${MainColor.BACKGROUND};
@@ -70,19 +70,19 @@ const CategoryContent = styled.View`
 `
 //info
 const InfoContainer = styled.View`
-margin-top: 3%;
+margin-top: 8px;
 `
 const InfoHeader = styled.TouchableOpacity`
-flex-direction: row;
-justify-content: space-between;
-padding: 0 5% 5% 5%;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 0 16px 16px 24px;
 `
 const Info = styled.TouchableOpacity`
 
 `
 const InfoCount = styled.View`
     width: 80%;
-    height: 40px;
+    height: 32px;
     padding: 10px;
     margin-left: 10px;
     border-radius: 2px ;
@@ -91,17 +91,16 @@ const InfoCount = styled.View`
     flex-direction: row;
 `
 const InfoCountButton = styled.TouchableOpacity`
-    opacity: 0.6;
-    margin: 0 5px;
+    margin: 0 4px;
 `
 //prefer
 const PrefContainer = styled.View`
-margin-top: 3%;
+margin-top: 8px;
 `
 const PrefHeader = styled.TouchableOpacity`
 flex-direction: row;
 justify-content: space-between;
-padding: 0 5% 5% 5%;
+padding: 0 16px 16px 24px;
 `
 const PrefWrapper = styled.View`
     padding: 16px;
@@ -118,14 +117,12 @@ const PrefContent = styled.View`
     align-items:center;
     flex-direction: row;
     justify-content: space-evenly;
-    margin-bottom: 5%;
-    height: 32px;
+    margin-bottom: 16px;
 `
 
 const OptionWrapper = styled.View`
-    padding: 3% 5%;
+    padding: 8px 12px;
     background-color: ${MainColor.BACKGROUND};
-    margin-bottom: 3%;
     height: 88px;
     justify-content:center;
 `
@@ -138,16 +135,18 @@ const OptionContent = styled.TouchableOpacity`
     width: 75px;
     height: 75px;
     justify-content: center;
-    margin-right: 10px;
+    margin-right: -10px;
 `
 const CreateButton = styled.TouchableOpacity`
     width: 90%;
     background-color: ${MainColor.Banana};
-    margin-left: 5%;
+    margin-left: 20px;
     justify-content:center;
     align-items:center;
     height: 50px;
     border-radius: 2px;
+    box-shadow: 0 0 3px rgba(25, 25, 25, 0.2);
+    margin-top: 24px;
 `
 
 const Writing = ({ navigation }) => {
@@ -159,7 +158,7 @@ const Writing = ({ navigation }) => {
     const [ name, setName ] = useState("") // 모임명
     const [ area, setArea ] = useState("") // 활동지역
     const [ image, setImage ] = useState(null) //사진
-    const [ period, setPriod ] = useState(true); // 단기 정기
+    const [ period, setPriod ] = useState(false); // 단기 정기
     const [ times, setTimes ] = useState("") // 주 몇번
     const [ beforeDay, setBeforeDay ] = useState(new Date()) // 시작날짜
     const [ afterDay, setAfterDay ] = useState(null) // 끝나는 날짜
@@ -168,7 +167,6 @@ const Writing = ({ navigation }) => {
     const [ secondOption, setSecondOption ] = useState(null); // 선호 옵션 선택
     
  
-
     const refresh = () => {
         setFirstToggle(true)
         setSecondToggle(false)
@@ -185,6 +183,7 @@ const Writing = ({ navigation }) => {
         setFirstOption(null)
         setSecondOption(null)
     }
+
     useLayoutEffect( () => {
         navigation.setOptions({
             headerRight: () => (<TouchableOpacity 
@@ -193,6 +192,8 @@ const Writing = ({ navigation }) => {
                 >
                 <Back width={24} height={24} />
             </TouchableOpacity>),
+            headerLeft: () => (<TouchableOpacity onPress={ () => navigation.popToTop() } ><AntDesign name="left" size={22} color="black" /></TouchableOpacity>)
+
         })
     })
     
@@ -200,7 +201,7 @@ const Writing = ({ navigation }) => {
             setSelected(index)
         }
     
-  
+
 
     const dataValidation = () => {
         selected === null ? Error.throw("no select") : null
@@ -208,15 +209,15 @@ const Writing = ({ navigation }) => {
         area === "" ? Error.throw("no area") : null
         period && afterDay === null ? Error.throw("no period && after day") : null
         period && times === "" ? Error.throw("no period & times") : null
+        period && beforeDay > afterDay ? Error.thorow("wrong Date") : null
         !image ? Error.throw("no image") : null
-        
     }
 
     const onPressMakingGroup = async() => {
         try {
             dataValidation() // 유효성 검사
 
-            const data = await fetch('http://192.168.1.80:8080/room/register', {
+            const data = await fetch('http://211.227.151.158:8080/room/register', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',
@@ -237,8 +238,8 @@ const Writing = ({ navigation }) => {
             }).then( res => res.json() ).catch( e => Alert.alert("에러가 발생하였습니다."))
             console.log("방번호:",data)
             await unLoadImage(data)
-            Alert.alert("등록!")
-            navigation.pop()
+            Alert.alert("모임 생성이 완료되었어요.")
+            navigation.popToTop()
             
         } catch (error) {
             console.log(error)
@@ -246,7 +247,7 @@ const Writing = ({ navigation }) => {
         }
     }
     const unLoadImage = async (roomID) => {
-        const data = await fetch('http://192.168.1.80:8080/file/upload', {
+        const data = await fetch('http://211.227.151.158:8080/file/upload', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',
@@ -272,11 +273,11 @@ const Writing = ({ navigation }) => {
                         <CategoryTitle>모임 카테고리</CategoryTitle>
                         {firstToggle ? 
                         <CategoryToggle >
-                            <Down width={24} height={24} />
+                            <Down width={24} height={24} fill={"#474747"}/>
                         </CategoryToggle> :
                         <CategoryToggle >
-                            <Up width={24} height={24} />
-                        </CategoryToggle>
+                            <AntDesign name="left" size={22} color="#474747" />
+                                                    </CategoryToggle>
                         }
                     </CategoryHeader>
                     {firstToggle ?
@@ -328,36 +329,36 @@ const Writing = ({ navigation }) => {
                             <CategoryTitle>모임 기본정보</CategoryTitle>
                             {secondToggle ? 
                             <CategoryToggle>
-                                <Down width={24} height={24} />
+                                <Down width={24} height={24} fill={"#474747"} />
                             </CategoryToggle> :
                             <CategoryToggle >
-                                <Up width={24} height={24} />
+                            <AntDesign name="left" size={22} color="#474747" />
                             </CategoryToggle>
                             }
                     </InfoHeader>
                     {secondToggle ?
-                    <PrefWrapper>
+                    <PrefWrapper  >
                         <PrefContents>
-                            <PrefContent>
-                                <Base1 style={{ marginRight: 12 }} />
+                            <PrefContent style={{ paddingLeft: 12,}} >
+                                <Base1 style={{ marginRight: 16 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14 }} >모임명</Text>
-                                <TextInput onChangeText={(text) => setName(text)}  value={name} placeholder='모임명을 적어주세요' maxLength={15} style={{ width: '80%', fontFamily: 'Noto400', fontSize: 12, height: 40,padding: 10 , paddingTop: 0, paddingBottom: 0,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2, alignItems: 'center', justifyContent: 'center' }}  ></TextInput>
+                                <TextInput onChangeText={(text) => setName(text)}  value={name} placeholder='모임명을 적어주세요' maxLength={15} style={{ width: '80%', fontFamily: 'Noto400', fontSize: 12, height: 32,padding: 4 ,backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#DBDBDD', borderRadius: 2, alignItems: 'center', justifyContent: 'center' }}  ></TextInput>
                             </PrefContent>
-                            <PrefContent>
-                                <Base2 style={{ marginRight: 12 }} />
+                            <PrefContent style={{ paddingLeft: 12,}}  >
+                                <Base2 style={{ marginRight: 16 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14 }}  >활동지</Text>
-                                <TextInput onChangeText={(text) => setArea(text)} value={area} placeholder='활동 장소를 적어주세요' style={{ width: '80%', height: 40, fontFamily: 'Noto400', fontSize: 12,padding: 10 ,backgroundColor: 'white', paddingTop: 0, paddingBottom: 0,marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2 }}  ></TextInput>
+                                <TextInput onChangeText={(text) => setArea(text)} value={area} placeholder='활동 장소를 적어주세요' maxLength={10}  style={{ width: '80%', height: 32, fontFamily: 'Noto400', fontSize: 12,padding: 4 ,backgroundColor: 'white', paddingTop: 0, paddingBottom: 0,marginLeft: 10, borderWidth: 1, borderColor: '#DBDBDD', borderRadius: 2 }}  ></TextInput>
                             </PrefContent>
-                            <PrefContent>
-                                <Base3 style={{ marginRight: 12 }} />
+                            <PrefContent style={{ paddingLeft: 12,}}  >
+                                <Base3 style={{ marginRight: 16 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14 }}  >사진</Text>
-                                <View style={{ width: '80%', flexDirection: 'row', justifyContent:'space-between',marginRight: 10, height: 38  }} >
+                                <View style={{ width: '80%', flexDirection: 'row', justifyContent:'space-between',marginRight: 10, height: 38, alignItems:'center'  }} >
                                     <View
-                                        style={{ width: '70%',backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#999', borderRadius: 2, paddingLeft: 10, textAlign: 'center', justifyContent: 'center'}} >
+                                        style={{ width: '70%',backgroundColor: 'white', marginLeft: 10, borderWidth: 1, borderColor: '#DBDBDD', borderRadius: 2, paddingLeft: 10,height: 32, textAlign: 'center', justifyContent: 'center'}} >
                                         <Text style={{ fontFamily: 'Noto400', fontSize: 12 }} >
                                         {image 
                                           ? 
-                                        `${image.substring(image.lastIndexOf("/")+1).substr(0,15)}${image.substr(-4)}.jpg`
+                                        `${image.substr(0,10)}${image.substr(-4)}.jpg`
                                           :
                                         null    
                                         }
@@ -369,8 +370,8 @@ const Writing = ({ navigation }) => {
                                     />
                                 </View>
                             </PrefContent>
-                            <PrefContent>
-                                <Base4 style={{ marginRight: 12 }} />
+                            <PrefContent style={{ paddingLeft: 12,}}  >
+                                <Base4 style={{ marginRight: 16 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14}}  >횟수</Text>
                                 <View style={{ flexDirection: 'row', width: '80%', justifyContent: 'space-between', marginLeft: 10, alignItems: 'center' }} >
                                     <View style={{ width: '50%', flexDirection: 'row' }} >
@@ -379,32 +380,32 @@ const Writing = ({ navigation }) => {
                                                 setPriod(false)
                                                 setAfterDay(null)
                                             } }
-                                            style={{ width: '45%',height:40 ,backgroundColor: period ? 'white' : MainColor.GRAY2 , borderWidth: 1, borderColor: '#999', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text  style={{ opacity: 0.4, fontFamily: 'Noto400', fontSize: 12}}>단기</Text>
+                                            style={{ width: '45%',height:32 ,backgroundColor: period ? 'white' : '#c4c4c4' , borderWidth: 1, borderColor: '#DBDBDD', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text  style={{ color: '#898989', fontFamily: 'Noto500', fontSize: 12}}>단기</Text>
                                         </TouchableOpacity>
                                         <TouchableOpacity 
                                             onPress={() => setPriod(true)}
-                                            style={{ width: '45%',height:40 ,backgroundColor: period ? MainColor.GRAY2 : 'white' , borderWidth: 1, borderColor: '#999', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
-                                                <Text style={{ opacity: 0.4, fontFamily: 'Noto400', fontSize: 12}} >정기</Text>
+                                            style={{ width: '45%',height:32 ,backgroundColor: period ? '#c4c4c4': 'white' , borderWidth: 1, borderColor: '#DBDBDD', borderRadius: 2, justifyContent: 'center', alignItems: 'center' }}>
+                                                <Text style={{ color: '#898989', fontFamily: 'Noto500', fontSize: 12}} >정기</Text>
                                         </TouchableOpacity>
                                     </View>
                                     { period 
                                       ? 
                                         <View style={{ width: '50%', flexDirection: 'row', justifyContent: 'flex-end', alignItems:'center'}} >
-                                            <Text style={{ width: '25%', paddingLeft: 10}} >주</Text>
-                                            <TextInput onChangeText={(text) => setTimes(text)} value={times} placeholder='회' style={{ width: '75%', height: 40,padding: 8,backgroundColor: 'white', borderWidth: 1, borderColor: '#999', borderRadius: 2, textAlign:'right' }}></TextInput>
+                                            <Text style={{ textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14, marginRight: 8 }}  >주</Text>
+                                            <TextInput onChangeText={(text) => setTimes(text)} maxLength={1} value={times} placeholder='회' style={{ width: '75%', height: 32,padding: 8,backgroundColor: 'white', borderWidth: 1, borderColor: '#DBDBDD', borderRadius: 2, textAlign:'right' }}></TextInput>
                                         </View>
                                     :
                                         null
                                       }
                                 </View>
                             </PrefContent>
-                            <PrefContent>
-                                <Base5 style={{ marginRight: 12 }} />
+                            <PrefContent style={{ paddingLeft: 12,}}  >
+                                <Base5 style={{ marginRight: 16 }} />
                                 <Text style={{ width: 50, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14 }}  >활동일</Text>
                                 {period 
                                   ?
-                                  <View style={{ flexDirection: 'row', width: '80%', justifyContent: 'space-between', marginLeft: 10, alignItems: 'center' }} >
+                                  <View style={{ flexDirection: 'row', width: '80%', justifyContent: 'space-between', marginLeft: 10, alignItems: 'center',  }} >
                                     <DatePickers setDay={setBeforeDay} />
                                     <Text style={{ opacity: 0.2, fontSize: 22}} > - </Text>
                                     <DatePickers setDay={setAfterDay} />
@@ -415,16 +416,16 @@ const Writing = ({ navigation }) => {
                                 </View>
                                 }
                             </PrefContent>
-                            <PrefContent>
-                                <Base6 style={{ marginRight: 12 }} />
-                                <Text style={{ width: 55, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14}} >모집인원</Text>
+                            <PrefContent style={{ paddingLeft: 12, marginRight: -12 }}  >
+                                <Base6 style={{ marginRight: 14 }} />
+                                <Text style={{ width: 52, textAlign: 'left', color: "#515151DE", fontFamily: 'Noto500', fontSize: 14}} >모집인원</Text>
                                 <InfoCount>
                                     <InfoCountButton>
-                                        <Text onPress={() => count < 10 ? setCount(count+1) : null } >+</Text>
+                                        <Text onPress={() => count < 10 ? setCount(count+1) : null } style={{ color: "#B5B8BB", lineHeight: 16 }} >+</Text>
                                     </InfoCountButton>
-                                    <Text style={{ color: "#515151DE" }} >{count}</Text>
+                                    <Text style={{ color: "#515151DE", lineHeight: 16 }} >{count}</Text>
                                     <InfoCountButton>
-                                        <Text onPress={() => count > 2 ? setCount(count-1) : null } >-</Text>
+                                        <Text onPress={() => count > 2 ? setCount(count-1) : null } style={{ color: "#B5B8BB", lineHeight: 16 }} >-</Text>
                                     </InfoCountButton>
                                 </InfoCount>
                             </PrefContent>
@@ -444,10 +445,10 @@ const Writing = ({ navigation }) => {
                             <CategoryTitle>선호 옵션</CategoryTitle>
                             {thirdToggle ? 
                             <CategoryToggle >
-                                <Down width={24} height={24} />
+                                <Down width={24} height={24} fill={"#474747"} />
                             </CategoryToggle> :
                             <CategoryToggle >
-                                <Up width={24} height={24} />
+                            <AntDesign name="left" size={22} color="#474747" />
                             </CategoryToggle>
                             }
                     </PrefHeader>
@@ -456,12 +457,22 @@ const Writing = ({ navigation }) => {
                     <OptionContioner  >
                         <OptionContent onPress={ () => setFirstOption( firstOption === null ? "동성" : null  ) } >
                                 {firstOption 
-                                    ? 
-                                    <Prefer2   />
-                                    :
+                                     ? 
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
+                                    <Prefer2  />
+                                    <Text style={{ color: MainColor.Banana }} >
+                                        동성끼리
+                                    </Text>
+                                </View>
+                                :
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }}>
                                     <Prefer1  />
+                                    <Text style={{ color: '#9F9FA0', fontFamily: 'Noto400', lineHeight: 18, fontSize:12 }} >
+                                        동성끼리
+                                    </Text>
+                                </View>
                                 }
-                            <View style={{ position:'absolute', top:10, right: 10}} >
+                            <View style={{ position:'absolute', top:-2, right: 2}} >
                                 { firstOption ?
                                     <Check fill={ firstOption ? '#FFd515' : 'black'}/>
                                 :  null }
@@ -470,11 +481,21 @@ const Writing = ({ navigation }) => {
                         <OptionContent onPress={ () => setSecondOption( secondOption === null ? "동갑" : null )} >
                             {secondOption 
                                 ? 
-                                <Prefer4  />
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
+                                    <Prefer4  />
+                                    <Text style={{ color: MainColor.Banana }} >
+                                        동갑끼리
+                                    </Text>
+                                </View>
                                 :
-                                <Prefer3  />
+                                <View style={{ alignItems: 'center', justifyContent: 'center' }} >
+                                    <Prefer3  />
+                                    <Text style={{ color: '#9F9FA0', fontFamily: 'Noto400', lineHeight: 18, fontSize:12 }} >
+                                        동갑끼리
+                                    </Text>
+                                </View>
                                 }
-                            <View style={{ position:'absolute', top:10, right: 10}} >
+                            <View style={{ position:'absolute', top:-2, right: 2}} >
                                 { secondOption ? 
                                     <Check fill={ secondOption ? '#FFd515' : 'black'}/>
                                 :  null }
@@ -489,7 +510,7 @@ const Writing = ({ navigation }) => {
             <CreateButton onPress={() => {
                 onPressMakingGroup()
                 }}> 
-                <Text style={{ color: MainColor.BLACK }} >모임 만들기</Text>
+                <Text style={{ color: MainColor.BLACK , fontFamily: "Noto500", }} >모임 만들기</Text>
             </CreateButton>
         </Wrapper>
     )

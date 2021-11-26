@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions ,Text, TouchableOpacity, View } from 'react-native'
+import { Dimensions ,FlatList,Text, TouchableOpacity, View } from 'react-native'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { MainColor } from '../../components/Color'
@@ -8,16 +8,21 @@ import Goal from '../../asset/4_page/goal.svg'
 import Out from '../../asset/4_page/out.svg'
 import { ICONSIZE } from '../../components/Size'
 import D_Day from '../../components/D_Day'
-
+import IngImage from '../../components/IngImage'
+import Mark from '../../asset/common/4_tag/mark.svg'
 
 const Width = Dimensions.get('window').width
+const Color = ['#FFD515', '#FF5D17', '#266CF9', '#4BBF00', "#FF8515" ,'#F6F6F6' ]
+
 
 
 const  GroupCount = styled.View`
     margin-left: 16px;
     flex-direction: row;
+    height: 24px;
+    align-items:center;
 `
-const Wrapper = styled.ScrollView`
+const Wrapper = styled.View`
     background-color: ${MainColor.BACKGROUND};
     width: 100%;
 `
@@ -26,18 +31,20 @@ const Contents = styled.View`
     padding: 0 16px 16px 16px;
     width: 100%;
 `
-const Content = styled.View`
+const Content = styled.TouchableOpacity`
     width:100%;
     height: 184px;
     flex-direction: row;
     justify-content: space-between;
-    margin-bottom: 16px;
-    margin-top: 16px;
+    padding-bottom: 16px;
+    padding-top: 16px;
+    border-bottom-color: #eee;
+    border-bottom-width: 1px;
 `
 const PostImage = styled.View`
     height:100%;
     width: ${Width*0.33}px;
-    background-color:black;
+    background-color:white;
     border-radius: 2px;
 `
 const ContentBox = styled.View`
@@ -56,7 +63,7 @@ const ContentHeaderView = styled.View`
 const ContentHeaderViewText = styled.View`
     width:50px;
     height: 16px;
-    background-color: ${ props => props.backgroundColor ? MainColor.Banana : 'black' };
+    background-color: ${ props => props.backgroundColor ? 'black' : MainColor.Banana };
     align-items:center;
     justify-content: center;
     border-radius:2px;
@@ -72,11 +79,18 @@ const ContentBottomView = styled.View`
 `
 
 
-const ing = () => {
+const ing = ({navigation}) => {
     const user = useSelector( (state) => state.loginout.user)
 
     const [ loading, setLoading ] = useState(true)
     const [ myRoomList, setMyRoomList ] = useState(null)
+    const [ image, setImage ] = useState()
+
+    const getAllLists = async(lists) => {
+        const data = await fetch(`http://211.227.151.158:8080/file/getImg/${lists}`).then( res => res.json() ).catch( e => console.log(e))
+        setImage(data.img)
+    }
+
 
 
     const getMyRoomList = async() => {
@@ -92,9 +106,28 @@ const ing = () => {
         }).then( res => res.json() ).catch( e => console.log("실패"))
         setMyRoomList(data)
         setLoading(false)
-        console.log(data[0])
     }
     
+    
+    const onPressOutGroup = async(id) => {
+        
+        const data = await fetch('http://211.227.151.158:8080/memberInRoom/outRoom', {
+            method: 'put',
+            headers: {
+                "Accept": 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                "roomID" : id,
+                "memberID" : user.id,      // 방 생성하는 사람 id(방장)
+            })
+        }).then( res => res.json() ).catch( e => console.log("실패")) 
+        getMyRoomList()
+        console.log(id,data)
+    }
+    
+    
+
     useEffect( () => {
         getMyRoomList()
         // 방 리스트 가져오는 api
@@ -102,82 +135,77 @@ const ing = () => {
 
     }, [])
 
-    const onPressOutGroup = async(id) => {
-
-        const data = await fetch('http://211.227.151.158:8080/memberInRoom/outRoom', {
-            method: 'put',
-            headers: {
-              "Accept": 'application/json',
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "roomID" : id,
-                "memberID" : user.id,      // 방 생성하는 사람 id(방장)
-                })
-        }).then( res => res.json() ).catch( e => console.log("실패")) 
-        getMyRoomList()
-        console.log(id,data)
-    }
-
     return (
         <Wrapper>
             {myRoomList === null 
               ? 
                 null
               :
-                loading === true
-                  ? 
-                    <Text>로딩중 . . .</Text>
-                  : 
             <>  
                 <GroupCount >
-                    <Text style={{ fontFamily: 'Noto400', fontSize:12, letterSpacing: 0.15 }} >{myRoomList.length}</Text>
+                    <Text style={{ fontFamily: 'Noto400', fontSize:12, letterSpacing: 0.15, opacity: 0.8 }} >{myRoomList.length}</Text>
                     <Text style={{ fontFamily: 'Noto400', fontSize:12, color: MainColor.BLACK38, letterSpacing: 0.15 }} >개의 모임 진행중</Text>
                 </GroupCount>
+
                 <Contents>
-                {myRoomList.map( (list, index) => (
-                    <Content key={ index } >
-                        <PostImage />
-                        <ContentBox>
-                            <ContentHeader >
-                                <ContentHeaderView >
-                                    <ContentHeaderViewText backgroundColor={list.periodic}  >
-                                        <Text style={{ color: list.periodic ? MainColor.Banana : MainColor.BLACKBOX, fontSize: 10, fontFamily: 'Noto500', lineHeight: 16 }} >{list.periodic ? "단기" : "정기"}</Text>
-                                    </ContentHeaderViewText>
-                                </ContentHeaderView>
-
-                                <Text style={{ fontFamily: 'Dream', fontSize: 20, marginTop: 8 }} >{list.title}</Text>
-
-                                <View style={{ flexDirection: 'row', justifyContent:'space-between', width: "100%" }} >
-                                    <View style={{  alignItems:'center', justifyContent: 'center' }} >
-                                        <Text style={{ color: MainColor.BANANABOX, fontSize: 14, fontFamily: 'Noto500'  }}>{list.periodic ? `단기 ${list.frequency}회 모임` : `주 ${list.frequency}회 모임`}</Text>
-                                    </View>
+                <FlatList 
+                    refreshing={loading}
+                    onRefresh={() => getMyRoomList()}
+                    data={myRoomList}
+                    keyExtractor={ item => item.roomInfoDTO.id}
+                    renderItem={ ({item, index}) => (
+                        <Content  key={ index} onPress={ () => navigation.navigate('Detail', {'room': item.roomInfoDTO})} >
+                            <View>
+                            <IngImage lists={item.roomInfoDTO.id} />
+                                <D_Day endDate={item.roomInfoDTO.startDate} />
+                                <View style={{ position: 'absolute', bottom: -1, right: -1 }} >
+                                    <Mark width={17.5} height={17.5} fill={Color[item.roomInfoDTO.categoryID-1]} />
                                 </View>
+                            </View>    
+                            <ContentBox>
+                                <ContentHeader >
+                                    <ContentHeaderView >
+                                        <ContentHeaderViewText backgroundColor={item.roomInfoDTO.periodic}  >
+                                            <Text style={{ color: item.roomInfoDTO.periodic ? MainColor.BLACKBOX : MainColor.BANANABOX, fontSize: 10, fontFamily: 'Noto500', lineHeight: 16 }} >{item.roomInfoDTO.periodic ? "정기" : "단기"}</Text>
+                                        </ContentHeaderViewText>
+                                    </ContentHeaderView>
 
-                                <TouchableOpacity style={{ position: 'absolute', top: 0, right:0 }} >
-                                    <Chat width={24} height={24} fill={MainColor.BLACK50} />
-                                </TouchableOpacity>
-                                <TouchableOpacity style={{ position: 'absolute', top: 40, right:0 }} onPress={() => onPressOutGroup(list.id)} >
-                                    <Out width={24} height={24} fill={MainColor.BLACK50} />
-                                </TouchableOpacity>
-                            </ContentHeader>
+                                    <Text style={{ fontFamily: 'Dream', fontSize: 20, marginTop: 8, marginBottom: 12, letterSpacing: 0.15 }} >{item.roomInfoDTO.title}</Text>
 
-                            <ContentBottom>
-                                <ContentBottomView >
-                                    <View 
-                                        style={{ width: '99%', height:2, backgroundColor:MainColor.GRAY2, position:'absolute', bottom:-1 }} />
-                                    <View 
-                                        style={{ width: list.periodic ? '0%' : "30%" , height:2, backgroundColor:MainColor.Banana, position:'absolute', bottom:-1 }} />
-                                    <Text style={{ fontFamily: 'Noto400', fontSize: 12, color: MainColor.GRAY2, }} >활동 시작전이에요.</Text>
-                                    <View style={{ position:'absolute', bottom: 2, right: 0 }} >
-                                        <Goal width={ICONSIZE.BOTTOM_NAV_HEADER_ICON} height={ICONSIZE.BOTTOM_NAV_HEADER_ICON} fill={MainColor.BLACK38} />
+                                    <View style={{ flexDirection: 'row', justifyContent:'space-between', width: "100%" }} >
+                                        <View style={{  alignItems:'center', justifyContent: 'center' }} >
+                                            <Text style={{ color: MainColor.BANANABOX, fontSize: 14, fontFamily: 'Noto500',  }}>{item.roomInfoDTO.periodic ? `주 ${item.roomInfoDTO.frequency}회 모임` : `단기 ${item.roomInfoDTO.frequency}회 모임`}</Text>
+                                        </View>
                                     </View>
-                                </ContentBottomView>
-                            </ContentBottom>
-                        </ContentBox>
-                        <View style={{ position:'absolute', bottom: -16, left:-16, width: Width, height:1, backgroundColor: '#eee' }} />
-                    </Content>
-                ))}
+
+                                    <TouchableOpacity style={{ position: 'absolute', top: 0, right:0 }} >
+                                        <Chat width={24} height={24} fill={MainColor.BLACK50} />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={{ position: 'absolute', top: 40, right:0 }} onPress={() => onPressOutGroup(item.id)} >
+                                        <Out width={24} height={24} fill={MainColor.BLACK50} />
+                                    </TouchableOpacity>
+                                </ContentHeader>
+
+                                <ContentBottom>
+                                    <ContentBottomView >
+                                        <View 
+                                            style={{ width: '99%', height:2, backgroundColor:MainColor.GRAY2, position:'absolute', bottom:-1 }} />
+                                        <View 
+                                            style={{ width: item.roomInfoDTO.periodic ? '30%' : "0%" , height:2, backgroundColor:MainColor.Banana, position:'absolute', bottom:-1 }} />
+                                        <Text style={{ fontFamily: 'Noto400', fontSize: 12, color: MainColor.GRAY2, marginBottom: 4 }} >
+                                            {item.roomInfoDTO.periodic ? `활동완료까지${(<Text style={{ color: 'black' }} >7</Text>)}일` : "활동 시작전에이요." }
+                                        </Text>
+                                        <View style={{ position:'absolute', bottom: 2, right: 0 }} >
+                                            <Goal width={ICONSIZE.BOTTOM_NAV_HEADER_ICON} height={ICONSIZE.BOTTOM_NAV_HEADER_ICON} fill={MainColor.BLACK38} />
+                                        </View>
+                                    </ContentBottomView>
+                                </ContentBottom>
+                            </ContentBox>
+                        </Content>
+                        
+                        )}
+                    listFooterComponent={<View style={{ height:70, backgroundColor:'white' }} />}
+                />
                 </Contents>
             </>
             }
