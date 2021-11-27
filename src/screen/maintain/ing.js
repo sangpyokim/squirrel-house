@@ -41,12 +41,6 @@ const Content = styled.TouchableOpacity`
     border-bottom-color: #eee;
     border-bottom-width: 1px;
 `
-const PostImage = styled.View`
-    height:100%;
-    width: ${Width*0.33}px;
-    background-color:white;
-    border-radius: 2px;
-`
 const ContentBox = styled.View`
     height:100%;
     width: ${Width*0.67 - 48}px;
@@ -86,15 +80,10 @@ const ing = ({navigation}) => {
     const [ myRoomList, setMyRoomList ] = useState(null)
     const [ image, setImage ] = useState()
 
-    const getAllLists = async(lists) => {
-        const data = await fetch(`http://211.227.151.158:8080/file/getImg/${lists}`).then( res => res.json() ).catch( e => console.log(e))
-        setImage(data.img)
-    }
-
 
 
     const getMyRoomList = async() => {
-        const data = await fetch('http://211.227.151.158:8080/room/myRoomList', {
+        const data = await fetch('http://3.35.235.33:8080/room/myRoomList', {
             method: 'post',
             headers: {
               "Accept": 'application/json',
@@ -111,7 +100,7 @@ const ing = ({navigation}) => {
     
     const onPressOutGroup = async(id) => {
         
-        const data = await fetch('http://211.227.151.158:8080/memberInRoom/outRoom', {
+        const data = await fetch('http://3.35.235.33:8080/memberInRoom/outRoom', {
             method: 'put',
             headers: {
                 "Accept": 'application/json',
@@ -174,7 +163,7 @@ const ing = ({navigation}) => {
 
                                     <View style={{ flexDirection: 'row', justifyContent:'space-between', width: "100%" }} >
                                         <View style={{  alignItems:'center', justifyContent: 'center' }} >
-                                            <Text style={{ color: MainColor.BANANABOX, fontSize: 14, fontFamily: 'Noto500',  }}>{item.roomInfoDTO.periodic ? `주 ${item.roomInfoDTO.frequency}회 모임` : `단기 ${item.roomInfoDTO.frequency}회 모임`}</Text>
+                                            <Text style={{ color: MainColor.BANANABOX, fontSize: 14, fontFamily: 'Noto500',  }}>{item.roomInfoDTO.periodic ? `주 ${item.roomInfoDTO.frequency}회 모임` : `단기 모임`}</Text>
                                         </View>
                                     </View>
 
@@ -191,9 +180,9 @@ const ing = ({navigation}) => {
                                         <View 
                                             style={{ width: '99%', height:2, backgroundColor:MainColor.GRAY2, position:'absolute', bottom:-1 }} />
                                         <View 
-                                            style={{ width: item.roomInfoDTO.periodic ? '30%' : "0%" , height:2, backgroundColor:MainColor.Banana, position:'absolute', bottom:-1 }} />
+                                            style={{ width: item.roomInfoDTO.periodic ? '60%' : "0%" , height:2, backgroundColor:MainColor.Banana, position:'absolute', bottom:-1 }} />
                                         <Text style={{ fontFamily: 'Noto400', fontSize: 12, color: MainColor.GRAY2, marginBottom: 4 }} >
-                                            {item.roomInfoDTO.periodic ? `활동완료까지${(<Text style={{ color: 'black' }} >7</Text>)}일` : "활동 시작전에이요." }
+                                            {item.roomInfoDTO.periodic ? <Text>활동완료까지<Text style={{ color: 'black' }} > -7</Text>일</Text> : "활동 시작전에이요." }
                                         </Text>
                                         <View style={{ position:'absolute', bottom: 2, right: 0 }} >
                                             <Goal width={ICONSIZE.BOTTOM_NAV_HEADER_ICON} height={ICONSIZE.BOTTOM_NAV_HEADER_ICON} fill={MainColor.BLACK38} />

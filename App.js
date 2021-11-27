@@ -3,7 +3,7 @@ import { Alert, BackHandler, SafeAreaView } from 'react-native';
 import { QueryClient, QueryClientProvider } from 'react-query'
 import SplashScreen from 'react-native-splash-screen';
 
-import { Provider } from 'react-redux'
+import { Provider, useSelector } from 'react-redux'
 import { store } from './src/redux/store';
 
 import { NavigationContainer } from '@react-navigation/native'
@@ -15,8 +15,11 @@ import { useFonts } from 'expo-font'
 
 const queryClient = new QueryClient()
 
+
 export default function App() {
   const [ logging , setLogging ] = useState(false) // 임시, redux로 isloggedin 상태변경해야함
+
+  
   let [fontsLoaded] = useFonts({
     "Dream": require('./src/asset/fonts/DreamBold.ttf'),
     "Noto500": require('./src/asset/fonts/NotoSansKR-Medium.otf'),
@@ -40,10 +43,8 @@ export default function App() {
       // loaded === true && 저장된 유저정보 === true, 유저정보 리덕스에 저장되면 메인페이지로 이동 그렇지않으면 로그인페이지
       if( fontsLoaded === true ) {
         setLogging(true)
-        setTimeout( () => {
           SplashScreen.hide()
 
-        },3000)
       }
       const backHandler = BackHandler.addEventListener("hardwareBackPress", backAction);
       return () => backHandler.remove();

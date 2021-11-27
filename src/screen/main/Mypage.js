@@ -7,20 +7,14 @@ import D_Day from '../../components/D_Day'
 const Mypage = () => {
     const [ uri, setUri ] = useState()
 
-    const unLoadImage = async () => {
-        try {
-            const data = await axios.get('http://211.227.151.158:8080/file/getImg/7')
-            
+        const getAllLists = async(room) => {
+            const data = await axios.get('http://3.35.235.33:8080/file/getImg/1')
             setUri(data.data)
-
-          } catch (error) {
-            console.error(error);
-          }
-      }
-console.log
+        }
+      
     return (
         <View>
-            <Button title="123" onPress={() => unLoadImage()} />
+            <Button title="123" onPress={() => getAllLists()} />
             <Image 
                 style={{ height: 250, width: 250 }}
                 source={{ uri: uri }}

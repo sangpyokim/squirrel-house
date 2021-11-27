@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Dimensions, TouchableOpacity, View, Text, FlatList  } from 'react-native';
+import { Dimensions, TouchableOpacity, View, Text, FlatList, ImageBackground  } from 'react-native';
 import styled from 'styled-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { MainColor } from '../../../components/Color'
@@ -8,6 +8,8 @@ import LongRightIcon from '../../../asset/2_page/long_right_icon.svg'
 import BurningImage from '../../../asset/common/5_illustration/ill_bunning.svg'
 import List from '../../../components/List';
 import Down from '../../../asset/3_page/flow/flow_down.svg'
+
+import Mark from '../../../asset/common/4_tag/mark.svg'
 
 
 const Width = Dimensions.get('window').width
@@ -165,14 +167,14 @@ const Home = ({navigation}) => {
     const [ loading, setLoading ] = useState(true)
 
     const getAllLists = async() => {
-        const data = await fetch('http://211.227.151.158:8080/room/getList', {
+        const data = await fetch('http://3.35.235.33:8080/room/getList', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',
                   'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    "memberID" : "User1",      // 방 생성하는 사람 id(방장)
+                    "memberID" : user.id,      // 방 생성하는 사람 id(방장)
                     })
             }).then( res => res.json() ).catch( e => console.log(e))
             setLists(data)
@@ -221,7 +223,11 @@ return (
                     </TouchableOpacity>
                 </View>
                 <CurrentContents horizontal={true} bounces={false} showsHorizontalScrollIndicator={false} >
-                    <CurrentContent >
+
+                    <ImageBackground  source={ require('../../../asset/common/6_img/2/1_soccer.jpg')} style={{ width: 128, height: 112, marginRight: 8}}  borderRadius={2} >
+                        <View style={{ position: 'absolute', bottom: -1, right: -1 }} >
+                            <Mark width={17.5} height={17.5} fill={"#266CF9"} />
+                        </View>
                         <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
                             <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >운동</Text>
                         </View>
@@ -231,9 +237,12 @@ return (
                                 <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
                             </View>
                         </View>
+                    </ImageBackground>
 
-                    </CurrentContent>
-                    <CurrentContent>
+                    <ImageBackground  source={ require('../../../asset/common/6_img/2/2_game.png')} style={{ width: 128, height: 112, marginRight: 8}}  borderRadius={2} >
+                    <View style={{ position: 'absolute', bottom: -1, right: -1 }} >
+                            <Mark width={17.5} height={17.5} fill={"#FF5D17"} />
+                        </View>
                         <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
                             <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >오락</Text>
                         </View>
@@ -243,8 +252,12 @@ return (
                                 <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
                             </View>
                         </View>
-                    </CurrentContent>
-                    <CurrentContent>
+                    </ImageBackground>
+
+                    <ImageBackground  source={ require('../../../asset/common/6_img/2/3_study.png')} style={{ width: 128, height: 112, marginRight: 8}}  borderRadius={2} >
+                    <View style={{ position: 'absolute', bottom: -1, right: -1 }} >
+                            <Mark width={17.5} height={17.5} fill={"#4BBF00"} />
+                        </View>
                         <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
                             <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >공부</Text>
                         </View>
@@ -254,18 +267,8 @@ return (
                                 <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
                             </View>
                         </View>
-                    </CurrentContent>
-                    <CurrentContent>
-                        <View style={{ position: 'absolute', top:0, left:0, borderTopLeftRadius:2, backgroundColor:'black', height:24, width:55, alignItems:'center', justifyContent:'center' }} >
-                            <Text style={{ color:'white', fontFamily: 'Noto500', fontSize:12, lineHeight:20, textAlign: 'center'}} >사진</Text>
-                        </View>
-                        <View style={{ justifyContent:'center', flexDirection: 'row', alignItems:'center',position:'absolute', bottom:4, left:8}} >
-                            <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:14, color: MainColor.Banana }} >21</Text>
-                            <View>
-                                <Text style={{ fontFamily:'Noto500', lineHeight: 20, fontSize:12, position: 'absolute', left:2, bottom: -12 }} >개</Text>
-                            </View>
-                        </View>
-                    </CurrentContent>
+                    </ImageBackground>
+
                 </CurrentContents>
             </CurrentContainer>
 

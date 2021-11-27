@@ -5,9 +5,8 @@ const Width = Dimensions.get('window').width
 const Height = Dimensions.get('window').height
 
 const Info = (props) => {
-    console.log(props)
     return (
-        <ScrollView style={{ width: Width, height: Height, backgroundColor: 'white', }} >
+        <ScrollView style={{ width: Width, height: Height, backgroundColor: 'pransparent', }} >
             <Text>1234</Text>
         </ScrollView>
     )

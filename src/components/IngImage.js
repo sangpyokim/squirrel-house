@@ -4,17 +4,16 @@ import D_Day from './D_Day'
 import Mark from '../asset/common/4_tag/mark.svg'
 import Like from '../asset/common/list_icon/list_icon_4_like.svg';
 import { MainColor } from './Color';
-
+import axios from 'axios';
 const Width = Dimensions.get('window').width
 
 
 const IngImage = ({lists}) => {
     const [ image, setImage ] = useState()
     const getAllLists = async(lists) => {
-        const data = await fetch(`http://211.227.151.158:8080/file/getImg/${lists}`).then( res => res.json() ).catch( e => console.log(e))
-        setImage(data.img)
+        const data = await axios.get(`http://3.35.235.33:8080/file/getImg/${lists}`)
+        setImage(data.data)
     }
-
     useEffect(() => {
         getAllLists(lists)
     }, [])
@@ -32,7 +31,7 @@ const IngImage = ({lists}) => {
                 overflow: 'hidden',
             }}
             resizeMode='cover' 
-            source={{ uri: `data:image/png;base64,${image}` }} >
+            source={{ uri: `${image}` }} >
             </ImageBackground>
     )
 }

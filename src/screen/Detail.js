@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import { View, Text, Dimensions, ScrollView, TouchableOpacity, ImageBackground, Button } from 'react-native'
+import { View, Text, Dimensions, ScrollView, TouchableOpacity, ImageBackground, Image } from 'react-native'
+import axios from 'axios'
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs'
 import Info from '../screen/detail/Info'
 import Board from '../screen/detail/Board'
@@ -13,8 +14,13 @@ import Location from '../asset/common/list_icon/list_icon_1_location'
 import Date from '../asset/common/list_icon/list_icon_2_data'
 import My from '../asset/common/list_icon/list_icon_3_my'
 import Like from '../asset/common/list_icon/list_icon_4_like'
-
-
+import Out from '../asset/6_page/1_out.svg'
+import Renew from '../asset/6_page/2_renew.svg'
+import Share from '../asset/6_page/3_public.svg'
+import Heart from '../asset/6_page/9_heart.svg'
+import Time from '../asset/6_page/5_time.svg'
+import Pencil from '../asset/6_page/8_pencil.svg'
+import Mark from '../asset/common/4_tag/mark.svg'
 const Tab = createMaterialTopTabNavigator();
 
 const Width = Dimensions.get('window').width;
@@ -51,32 +57,33 @@ const Detail = ({navigation, route}) => {
     const {room} = route.params
 
     const getAllLists = async(room) => {
-        const data = await fetch(`http://211.227.151.158:8080/file/getImg/${room.id}`).then( res => res.json() ).catch( e => console.log(e))
-        setImage(data.img)
+        const data = await axios.get(`http://3.35.235.33:8080/file/getImg/${room}`)
+        setImage(data.data)
     }
-
     useEffect(() => {
-        getAllLists(room)
+        getAllLists(room.id)
     }, [])
 
     return (
         <>
         <ScrollView style={{ backgroundColor: 'transparent' }} >
-
-
-        <View style={{ width:Width, height:396, backgroundColor:'#e5e5e5' }} >
+            <Tab.Navigator 
+                screenOptions={{
+            tabBarIndicatorStyle:{ position: 'absolute', top: 0, backgroundColor: MainColor.Banana, height: 1.5 },
+        }} 
+            tabBar={ () => (<View style={{ width:Width, height:Dimensions.get('window').height-50 , backgroundColor:'#e5e5e5' }} >
             <ImageBackground
                 style={{ width:Width, height: 164, backgroundColor: 'wheat' }} 
                 resizeMode= 'cover' 
-                source={{ uri: `data:image/png;base64,${image}` }}>
-                <TouchableOpacity style={{ position:'absolute', top: 16, left: 16}} onPress={ () => navigation.popToTop()} >
+                source={{ uri: `${image}` }}>
+                <TouchableOpacity style={{ position:'absolute', top: 12, left: 16}} onPress={ () => navigation.popToTop()} >
                     <AntDesign name="left" size={24} color="white" />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ position:'absolute', top: 16, right: 16}} >
-                    <AntDesign name="left" size={24} color="white" />
+                <TouchableOpacity style={{ position:'absolute', top: 0, right: 0}} >
+                    <Renew />
                 </TouchableOpacity>
-                <TouchableOpacity style={{ position:'absolute', top: 16, right: 66}} >
-                    <AntDesign name="left" size={24} color="white" />
+                <TouchableOpacity style={{ position:'absolute', top: 0, right: 48}} >
+                    <Out  />
                 </TouchableOpacity>
 
                 <View style={{ flexDirection: 'row',position: 'absolute', bottom: 8, left:16 }} >
@@ -103,14 +110,14 @@ const Detail = ({navigation, route}) => {
 
                 <View style={{ flexDirection: 'row', alignItems: 'center', height: 16,  marginBottom: 16 }} >
                     <Text style={{  fontFamily: 'Noto400', fontSize: 12, color: '#949497', justifyContent: 'center', lineHeight: 16 }} >구체적인 모임 정보를 적어보세요.</Text>
-                    <AntDesign name="left" size={12} color="black" />
+                    <Pencil />
                     <View  style={{ width:Width, height: 1, backgroundColor: '#F6F6F6', marginBottom: 16, position: 'absolute', left:-16, bottom: -36}} />
                 </View>
                 
 
-                <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', top: 16, right: 16 }} >
-                    <AntDesign name="left" size={24} color="black" />
-                    <AntDesign name="left" size={24} color="black" style={{ marginLeft: 16 }} />
+                <View style={{ flexDirection: 'row', alignItems: 'center', position: 'absolute', top: 4, right: 16 }} >
+                    <Share marginRight={12} />
+                    <Heart />
                 </View>
 
                 <View style={{ marginTop: 24 }} >
@@ -125,13 +132,13 @@ const Detail = ({navigation, route}) => {
                     </View>
                     
                     <View style={{ marginBottom: 8 ,flexDirection: 'row', alignItems: 'center', }} >
-                        <Location width={16} height={16} fill={'#808184'} style={{ marginRight: 4}} />
+                        <Time width={16} height={16} fill={'#808184'} style={{ marginRight: 4}} />
                         <Text style={{ width: 54, marginRight: 16, fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, color: "#515151B2"}} >횟수</Text>
 
                         <View style={{ flexDirection: 'row', alignItems: 'center' }} >
                             <Text style={{ fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, lineHeight: 16 }} >{room.periodic ? "장기" : '단기'}</Text>
-                            <Text style={{ fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, lineHeight: 16, color: MainColor.GRAY2 }} > 주 </Text>
-                            <Text style={{ fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, lineHeight: 16 }} >{`${room.frequency}회`}</Text>
+                            <Text style={{ fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, lineHeight: 16, color: MainColor.GRAY2 }} >{room.periodic ? " 주 " : ''}</Text>
+                            <Text style={{ fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, lineHeight: 16 }} >{room.periodic ? `${room.frequency}회` : ''}</Text>
                         </View>
 
                     </View>
@@ -141,7 +148,7 @@ const Detail = ({navigation, route}) => {
                         <Text style={{ width: 54, marginRight: 16, fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, color:"#515151B2" }} >활동일</Text>
 
                         <View style={{ flexDirection: 'row' }} >
-                            <Text>{`${room.startDate} ${room.endDate === null ? null : ' ~ ' } ${room.endDate}`}</Text>
+                            <Text>{`${room.startDate} ${room.periodic === null ? null : ' ~ ' } ${room.endDate}`}</Text>
                             <TagContainer period={room.periodic} style={{ justifyContent: 'center', alignItems: 'center', marginLeft: 4 }} >
                                 <Tag period={room.periodic} >{room.periodic ? "장기" : "단기"}</Tag>
                             </TagContainer>
@@ -152,19 +159,65 @@ const Detail = ({navigation, route}) => {
                         <My width={16} height={16} fill={'#808184'} style={{ marginRight: 4}} />
                         <Text style={{ width: 54, marginRight: 16 , fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.15, color:"#515151B2"}} >모집인원</Text>
 
-                        <Text style={{ fontFamily: 'Noto400', fontSize: 14 }} >{`${room.nowPeople}/${room.maxPeople}`}</Text>
+                        <Text style={{ fontFamily: 'Noto400', fontSize: 14, letterSpacing: 0.25 }} >{`${room.nowPeople}/${room.maxPeople}`}</Text>
 
                     </View>
                 </View>
-                                <Button title="타티틀" onPress={ () => navigation.navigate('정보') } />
+            <View style={{ position: 'absolute', bottom: -425,width: '110%', backgroundColor: 'white',  }} >
+                <View style={{ flexDirection:'row' }} >
+                    <View style={{ position: 'absolute',top: -1 }} ><Mark fill={MainColor.Banana} /></View>
+                    <View style={{ width: '33%', alignItems: 'center', justifyContent: 'center', height: 48, borderTopColor: MainColor.Banana, borderTopWidth:1.5, borderRightWidth: 1, borderRightColor: "#e2e2e2" }} >
+                        <Text style={{ fontFamily:'Noto500', fontSize: 16, letterSpacing: 0.15 }} >정보</Text>
+                    </View>
+                    <View style={{ width: '33%', alignItems: 'center', justifyContent: 'center', height: 48,borderBottomWidth: 0.4, borderBottomColor: "#e2e2e2"  }} >
+                        <Text style={{ fontFamily:'Noto500', fontSize: 16, letterSpacing: 0.15, opacity: 0.5 }} >게시판</Text>
+                    </View>
+                    <View style={{ width: '33%', alignItems: 'center', justifyContent: 'center', height: 48,borderBottomWidth: 0.4, borderBottomColor: "#e2e2e2"  }} >
+                        <Text style={{ fontFamily:'Noto500', fontSize: 16, letterSpacing: 0.15 , opacity: 0.5}} >채팅방</Text>
+                    </View>
+                </View>
+                    <View>
+                        <View style={{ padding: 16 }} >
+                            <Text style={{ fontFamily: 'Noto500', fontSize:16, marginBottom: 8 }} >모임 설명</Text>
+                            <Text style={{ fontFamily: 'Noto400', fontSize:12, opacity: 0.4}} >아직 모임정보가 없어요...</Text>
+                            <Text style={{ fontFamily: 'Noto400', fontSize:12, opacity: 0.4 }} >구체적일수록 매칭률이 올라간다G! <Pencil /></Text>
+                        </View>
+                    </View>
+                    <View style={{ backgroundColor: '#e5e5e5', height: 8 }} />
+                    <View style={{ padding: 16}} >
+                        <Text style={{ fontFamily: 'Noto500', fontSize: 16, opacity:0.8, marginBottom: 8  }} >
+                            모임 멤버 <Text style={{ color: MainColor.Banana, fontFamily: 'Noto500', fontSize: 16, }} >1</Text>명
+                        </Text>
+                        <Text style={{ fontFamily: 'Noto500', fontSize: 12, opacity:0.5  }} >
+                            남 0  여 1  평균연령대 중
+                        </Text>
+                    </View>
+                    <View style={{ backgroundColor: '#e5e5e5', height: 1 }} />
+                    <View style={{ flexDirection: 'row',padding:16 }} >
+                        <Image source={require('../asset/common/6_img/6/2_me.png')} style={{ width: 48, height: 48 }} />
+                        <View style={{ flexDirection:'column', marginLeft: 8 }} >
+                            <View style={{ justifyContent:'space-between', flexDirection: 'row' }} >
+                                <Text style={{ fontFamily: "Noto500", fontSize: 12 }} >히다히히
+                                    <Text style={{ fontFamily: "Noto500", fontSize: 10 }} >님 
+                                        <Text style={{ fontFamily: "Noto500", fontSize: 10, color: MainColor.Banana  }} >   LV3 </Text>
+                                        
+                                    </Text>
+                                </Text>
+                            </View>
+                            <Text style={{ fontFamily: 'Noto400', fontSize: 12, opacity: 0.28 }} >안녕하세요!</Text>
+                        <View style={{ position: 'absolute', right: -222 }} >
+                            <Text style={{ fontFamily: "Noto500", fontSize: 12, color: MainColor.Banana }} >  모임장</Text>
+                        </View>
+                        </View>
+                    </View>
+                        <View style={{ backgroundColor: '#e5e5e5', height: 1, width:'100%' }} />
+                        <View style={{ height: 100 }} />
+
             </View>
         </View>
-
-            <Tab.Navigator 
-                screenOptions={{
-            tabBarIndicatorStyle:{ position: 'absolute', top: 0, backgroundColor: MainColor.Banana, height: 1.5 },
-
-        }} >
+    </View>)
+            }
+        >
             <Tab.Screen name="정보" component={Info} />
             <Tab.Screen name="게시판" component={Board} />
             <Tab.Screen name="채팅방" component={ChatRoom} />

@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react'
+import React, { useEffect, useLayoutEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Text, View,Button, TouchableOpacity, Keyboard, TextInput, Alert, Image } from 'react-native'
 import { AntDesign, Ionicons } from '@expo/vector-icons';
@@ -45,7 +45,7 @@ const CategoryContainer = styled.View`
 const CategoryHeader = styled.TouchableOpacity`
     flex-direction: row;
     justify-content: space-between;
-    padding: 0 16px 16px 24px;
+    padding: 0 16px 4px 24px;
 `
 const CategoryTitle = styled.Text`
     font-size: 16px;
@@ -151,7 +151,7 @@ const CreateButton = styled.TouchableOpacity`
 
 const Writing = ({ navigation }) => {
     const user = useSelector( (state) => state.loginout.user)
-    const [ firstToggle, setFirstToggle] = useState(true)
+    const [ firstToggle, setFirstToggle] = useState(false)
     const [ secondToggle, setSecondToggle] = useState(false)
     const [ thirdToggle, setThirdToggle] = useState(false)
     const [ selected, setSelected ] = useState(null) // 카테고리 인덱스
@@ -184,6 +184,13 @@ const Writing = ({ navigation }) => {
         setSecondOption(null)
     }
 
+    useEffect( () => {
+        setTimeout(() => {
+            setFirstToggle(true)
+
+        }, 100)
+    },[])
+
     useLayoutEffect( () => {
         navigation.setOptions({
             headerRight: () => (<TouchableOpacity 
@@ -200,14 +207,12 @@ const Writing = ({ navigation }) => {
         const onPress = (index) => {
             setSelected(index)
         }
-    
+    console.log(selected, name, area, period, times, beforeDay, afterDay, count)
 
-
-    const dataValidation = () => {
+    const dataValidation =  () => {
         selected === null ? Error.throw("no select") : null
         name === "" ? Error.throw("no name") : null
         area === "" ? Error.throw("no area") : null
-        period && afterDay === null ? Error.throw("no period && after day") : null
         period && times === "" ? Error.throw("no period & times") : null
         period && beforeDay > afterDay ? Error.thorow("wrong Date") : null
         !image ? Error.throw("no image") : null
@@ -217,7 +222,7 @@ const Writing = ({ navigation }) => {
         try {
             dataValidation() // 유효성 검사
 
-            const data = await fetch('http://211.227.151.158:8080/room/register', {
+            const data = await fetch('http://3.35.235.33:8080/room/register', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',
@@ -229,7 +234,7 @@ const Writing = ({ navigation }) => {
                     "place" : area,         // 활동지
                     "periodic" : period,      // 정기 모임이면 true 단기 모임이면 false
                     "startDate" : JSON.stringify(beforeDay).substr(1, 10),   // 모임 시작 날짜
-                    "endDate" : JSON.stringify(afterDay).substr(1, 10),   // 모임 종료 날짜
+                    "endDate" :  afterDay === null ? JSON.stringify(beforeDay).substr(1, 10) : JSON.stringify(afterDay).substr(1, 10),   // 모임 종료 날짜
                     "frequency": times,    // 모임 종료 날짜
                     "maxPeople" : count,      // 최대 인원
                     "prefer" : `${firstOption ? firstOption : null}_${secondOption ? secondOption : null}`,   // 선호 옵션
@@ -247,7 +252,7 @@ const Writing = ({ navigation }) => {
         }
     }
     const unLoadImage = async (roomID) => {
-        const data = await fetch('http://211.227.151.158:8080/file/upload', {
+        const data = await fetch('http://3.35.235.33:8080/file/upload', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',
@@ -262,38 +267,41 @@ const Writing = ({ navigation }) => {
       }
 
     return (
-        <Wrapper bounces={false} onPress={Keyboard.dismiss} >
+        <Wrapper bounces={false} >
                 {/* 카테고리 */}                
-                <CategoryContainer>
-                    <CategoryHeader onPress={ () => {
+                <CategoryContainer >
+                    <CategoryHeader style={{ marginBottom: 12 }}  onPress={ () => {
                             setFirstToggle(true)
                             setSecondToggle(false)
                             setThirdToggle(false)
                             } }  >   
                         <CategoryTitle>모임 카테고리</CategoryTitle>
-                        {firstToggle ? 
-                        <CategoryToggle >
-                            <Down width={24} height={24} fill={"#474747"}/>
-                        </CategoryToggle> :
-                        <CategoryToggle >
-                            <AntDesign name="left" size={22} color="#474747" />
-                                                    </CategoryToggle>
+                        {firstToggle 
+                            ? 
+                            <CategoryToggle >
+                                <Down width={24} height={24} fill={"#474747"}/>
+                            </CategoryToggle> 
+                            :
+                            <CategoryToggle >
+                                <AntDesign name="left" size={22} color="#474747" />
+                            </CategoryToggle>
                         }
                     </CategoryHeader>
+                    
                     {firstToggle ?
                     <CategoryContents horizontal={true} bounces={false} showsHorizontalScrollIndicator={false}  >
-                        { MainCategory.map( (category, index) => (
-                            <CategoryContent key={index} >
-                                <TouchableOpacity 
-                                    onPress={() => onPress(index)} 
-                                    style={{ 
-                                        backgroundColor: index === selected ? 'white': MainColor.BACKGROUND,
-                                        borderColor: index === selected ? MainColor.Banana: null,
-                                        borderWidth: index === selected ? 1 : null,
-                                        height: 75, width: '100%',
-                                        alignItems: 'center', 
-                                        justifyContent: 'center' ,
-                                    }} >
+                    { MainCategory.map( (category, index) => (
+                        <CategoryContent key={index} >
+                        <TouchableOpacity 
+                            onPress={() => onPress(index)} 
+                            style={{ 
+                                backgroundColor: index === selected ? 'white': MainColor.BACKGROUND,
+                                borderColor: index === selected ? MainColor.Banana: null,
+                                borderWidth: index === selected ? 1 : null,
+                                height: 75, width: '100%',
+                                alignItems: 'center', 
+                                justifyContent: 'center' ,
+                            }} >
                                         {(() => {
                                             switch (index) {
                                             case 0:
@@ -310,11 +318,11 @@ const Writing = ({ navigation }) => {
                                                 return <Category6 width={24} height={24} />
                                             }
                                         })()}
-                                     <Text style={{ color:index === selected ? MainColor.Banana: MainColor.BLACK38, fontFamily: 'Noto400', lineHeight:20, fontSize: 12,  }} >{category}</Text>
-                                </TouchableOpacity>
-                            </CategoryContent>
-                        ))}
-                    </CategoryContents>
+                            <Text style={{ color:index === selected ? MainColor.Banana: MainColor.BLACK38, fontFamily: 'Noto500' }} >{category}</Text>
+                        </TouchableOpacity>
+                        </CategoryContent>
+                    ))}
+                </CategoryContents>
                     :
                         null
                     }

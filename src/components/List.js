@@ -101,7 +101,7 @@ const List = ({lists, short, long, navigation}) => {
     const [ image, setImage ] = useState()
     const [ switches, setSwitches ] = useState()
     const getAllLists = async(lists) => {
-        const data = await axios.get(`http://211.227.151.158:8080/file/getImg/${lists}`)
+        const data = await axios.get(`http://3.35.235.33:8080/file/getImg/${lists}`)
         setImage(data.data)
     }
     useEffect(() => {
