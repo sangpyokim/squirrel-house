@@ -164,6 +164,7 @@ const Detail = ({navigation, route}) => {
                     </View>
                 </View>
             <View style={{ position: 'absolute', bottom: -425,width: '110%', backgroundColor: 'white',  }} >
+                <View style={{ position: 'absolute', top: -8 , width: '100%', height: 8, backgroundColor: '#f2f3f5'}} />
                 <View style={{ flexDirection:'row' }} >
                     <View style={{ width: '33%', alignItems: 'center', justifyContent: 'center', height: 48, borderTopColor: MainColor.Banana, borderTopWidth:1.5, borderRightWidth: 1, borderRightColor: "#e2e2e2" }} >
                         <Text style={{ fontFamily:'Noto500', fontSize: 16, letterSpacing: 0.15 }} >정보</Text>
@@ -183,7 +184,7 @@ const Detail = ({navigation, route}) => {
                             <Text style={{ fontFamily: 'Noto400', fontSize:12, opacity: 0.4 }} >구체적일수록 매칭률이 올라간다G! <Pencil /></Text>
                         </View>
                     </View>
-                    <View style={{ backgroundColor: '#e5e5e5', height: 8 }} />
+                    <View style={{ backgroundColor: '#f2f3f5', height: 8 }} />
                     <View style={{ padding: 16}} >
                         <Text style={{ fontFamily: 'Noto500', fontSize: 16, opacity:0.8, marginBottom: 8  }} >
                             모임 멤버 <Text style={{ color: MainColor.Banana, fontFamily: 'Noto500', fontSize: 16, }} >1</Text>명
