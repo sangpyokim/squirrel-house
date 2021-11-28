@@ -20,7 +20,7 @@ import Share from '../asset/6_page/3_public.svg'
 import Heart from '../asset/6_page/9_heart.svg'
 import Time from '../asset/6_page/5_time.svg'
 import Pencil from '../asset/6_page/8_pencil.svg'
-import Mark from '../asset/common/4_tag/mark.svg'
+import Mark from '../asset/6_page/9_.svg'
 const Tab = createMaterialTopTabNavigator();
 
 const Width = Dimensions.get('window').width;
@@ -165,9 +165,9 @@ const Detail = ({navigation, route}) => {
                 </View>
             <View style={{ position: 'absolute', bottom: -425,width: '110%', backgroundColor: 'white',  }} >
                 <View style={{ flexDirection:'row' }} >
-                    <View style={{ position: 'absolute',top: -1 }} ><Mark fill={MainColor.Banana} /></View>
                     <View style={{ width: '33%', alignItems: 'center', justifyContent: 'center', height: 48, borderTopColor: MainColor.Banana, borderTopWidth:1.5, borderRightWidth: 1, borderRightColor: "#e2e2e2" }} >
                         <Text style={{ fontFamily:'Noto500', fontSize: 16, letterSpacing: 0.15 }} >정보</Text>
+                    <View style={{ position: 'absolute',top: -3,right:-2 }} ><Mark fill={MainColor.Banana} /></View>
                     </View>
                     <View style={{ width: '33%', alignItems: 'center', justifyContent: 'center', height: 48,borderBottomWidth: 0.4, borderBottomColor: "#e2e2e2"  }} >
                         <Text style={{ fontFamily:'Noto500', fontSize: 16, letterSpacing: 0.15, opacity: 0.5 }} >게시판</Text>
