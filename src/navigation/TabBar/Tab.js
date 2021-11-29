@@ -16,7 +16,7 @@ import { MainColor } from '../../components/Color'
 
 const Container = styled.TouchableOpacity`
     flex: 1;
-    align-items:center;
+    align-items:center; 
     justify-content:center;
     background-color: transparent;
 ` 

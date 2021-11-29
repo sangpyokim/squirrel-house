@@ -91,7 +91,7 @@ const HotGroup = ({navigation}) => {
 
     const getAllLists = async() => {
 
-        const data = await fetch('http://3.35.235.33:8080/room/getList', {
+        const data = await fetch('http://3.35.235.33:8080/room/hotRoomList', {
                 method: 'post',
                 headers: {
                   "Accept": 'application/json',

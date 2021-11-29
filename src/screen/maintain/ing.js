@@ -10,6 +10,7 @@ import { ICONSIZE } from '../../components/Size'
 import D_Day from '../../components/D_Day'
 import IngImage from '../../components/IngImage'
 import Mark from '../../asset/common/4_tag/mark.svg'
+import axios from 'axios'
 
 const Width = Dimensions.get('window').width
 const Color = ['#FFD515', '#FF5D17', '#266CF9', '#4BBF00', "#FF8515" ,'#F6F6F6' ]
@@ -99,19 +100,7 @@ const ing = ({navigation}) => {
     
     
     const onPressOutGroup = async(id) => {
-        
-        const data = await fetch('http://3.35.235.33:8080/memberInRoom/outRoom', {
-            method: 'put',
-            headers: {
-                "Accept": 'application/json',
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                "roomID" : id,
-                "memberID" : user.id,      // 방 생성하는 사람 id(방장)
-            })
-        }).then( res => res.json() ).catch( e => console.log("실패")) 
-        getMyRoomList()
+        const data = await axios.put(`http://3.35.235.33:8080/delete/${id}`)
         console.log(id,data)
     }
     
@@ -170,7 +159,7 @@ const ing = ({navigation}) => {
                                     <TouchableOpacity style={{ position: 'absolute', top: 0, right:0 }} >
                                         <Chat width={24} height={24} fill={MainColor.BLACK50} />
                                     </TouchableOpacity>
-                                    <TouchableOpacity style={{ position: 'absolute', top: 40, right:0 }} onPress={() => onPressOutGroup(item.id)} >
+                                    <TouchableOpacity style={{ position: 'absolute', top: 40, right:0 }} onPress={() => onPressOutGroup(item.roomInfoDTO.id)} >
                                         <Out width={24} height={24} fill={MainColor.BLACK50} />
                                     </TouchableOpacity>
                                 </ContentHeader>

@@ -313,7 +313,7 @@ const Writing = ({ navigation }) => {
                                             case 3:
                                                 return <Category4 width={24} height={24} />
                                             case 4:
-                                                return <Category5 width={24} height={24} />
+                                                return <Category5 width={24} height={24} fill={index === selected ? MainColor.Banana  : "#787979" } />
                                             case 5:
                                                 return <Category6 width={24} height={24} />
                                             }
